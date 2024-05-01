@@ -1,0 +1,10 @@
+services:
+  code-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    network_mode: host
+    volumes:
+      - $PWD/coder/.local:/root/.local
+      - $PWD/coder/.config:/root/.config
+      - $PWD:/root/project
