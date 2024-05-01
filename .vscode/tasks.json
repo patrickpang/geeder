@@ -7,9 +7,6 @@
       "label": "Launch web server",
       "type": "shell",
       "command": "uvicorn main:app --reload",
-      "options": {
-        "cwd": "${workspaceFolder}/web"
-      }
     }
   ]
 }

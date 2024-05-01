@@ -1,3 +1,5 @@
+from typing import Annotated
+
 import dominate
 from dominate.tags import (
     body,
@@ -9,11 +11,14 @@ from dominate.tags import (
     input_,
     main,
     p,
+    pre,
     script,
     textarea,
 )
-from fastapi import FastAPI
+from fastapi import FastAPI, Form
 from fastapi.responses import HTMLResponse
+
+from llm.groq import get_cards
 
 app = FastAPI()
 
@@ -47,9 +52,10 @@ async def home_page() -> str:
 
 
 @app.post("/generate", response_class=HTMLResponse)
-async def generate_segment() -> str:
-    segment = div()
+async def generate_segment(excerpt: Annotated[str, Form()]) -> str:
+    response = await get_cards(excerpt)
+
+    segment = pre()
     with segment:
-        p("Generating Anki cards...")
-        p("Anki cards generated!")
+        p(response)
     return segment.render()
