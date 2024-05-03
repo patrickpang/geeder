@@ -5,7 +5,7 @@ from groq import AsyncGroq
 client = AsyncGroq()
 
 MODEL = "llama3-70b-8192"
-PROMPT = "Create multiple Anki cards from below text. Question on front. Answer on back, Return front and back on separate lines."
+PROMPT = "You are a robot that takes excerpt from textbook as input, and return multiple Anki cards in YAML. Do not talk to user. Card schema is 'question: str, answer: str'"
 
 
 async def get_cards(excerpt: str) -> str:

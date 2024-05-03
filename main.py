@@ -81,6 +81,7 @@ async def home_page() -> str:
                 p("Your study copilot with Anki cards")
 
             with main():
+                # TODO: handle error
                 # input
                 with form(**{"hx-post": "/generate", "hx-target": "#output-message"}):
                     textarea(
