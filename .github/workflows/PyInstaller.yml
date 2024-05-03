@@ -5,16 +5,20 @@ on:
 
 jobs:
   pyinstaller-build:
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.config.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: ['windows-latest', 'ubuntu-latest', 'macos-latest']
+        config:
+          - { os: windows-latest, arch: x64 }
+          - { os: ubuntu-latest, arch: x64 }
+          - { os: macos-latest, arch: arm64 }
 
     steps:
       - name: Create Executable
         uses: sayyid5416/pyinstaller@v1
         with:
+          python_arch: ${{ matrix.config.arch }}
           python_ver: '3.12'
           pyinstaller_ver: '==6.6.0'
           spec: 'main.py'
