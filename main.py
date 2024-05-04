@@ -144,5 +144,5 @@ async def generate_text(excerpt: Annotated[str, Form()]) -> str:
 
 
 if __name__ == "__main__":
-    webbrowser.open_new("http://localhost:8000/")
-    uvicorn.run(app, host="localhost", port=8000)
+    webbrowser.open_new("http://localhost:20245/")
+    uvicorn.run(app, host="localhost", port=20245)
