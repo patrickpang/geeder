@@ -1,0 +1,26 @@
+name: Nuitka
+
+on:
+  push:
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ['macos-latest']
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: actions/setup-python@v5
+      with:
+        python-version: 3.12
+    - run: pip install -r requirements.txt Nuitka==2.2
+
+    - run: python -m nuitka --standalone --follow-imports --macos-create-app-bundle --macos-app-icon=static/android-chrome-512x512.png main.py
+
+    - uses: actions/upload-artifact@v4
+      with:
+        path: dist/*
