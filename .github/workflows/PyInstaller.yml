@@ -17,9 +17,9 @@ jobs:
     - uses: actions/setup-python@v5
       with:
         python-version: 3.12
-    - run: pip install -r requirements.txt pyinstaller==6.6.0
+    - run: pip install -r requirements.txt pyinstaller==6.6.0 pillow==10.3.0
 
-    - run: pyinstaller --onedir --windowed --add-data=static:static main.py
+    - run: pyinstaller --onedir --windowed --icon=static/android-chrome-512x512.png --add-data=static:static main.py
     - run: cp wrapper dist/main.app/Contents/MacOS/wrapper
     - run: chmod u+x dist/main.app/Contents/MacOS/{main,wrapper}
     - run: python change_entry_point.py
