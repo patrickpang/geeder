@@ -1,6 +1,7 @@
 from typing import Annotated
 
 import dominate
+import uvicorn
 from dominate.tags import (
     body,
     button,
@@ -132,3 +133,7 @@ async def home_page() -> str:
 async def generate_text(excerpt: Annotated[str, Form()]) -> str:
     response = await get_cards(excerpt)
     return response
+
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="localhost", port=8000)
