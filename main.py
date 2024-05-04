@@ -1,3 +1,4 @@
+import webbrowser
 from typing import Annotated
 
 import dominate
@@ -136,4 +137,5 @@ async def generate_text(excerpt: Annotated[str, Form()]) -> str:
 
 
 if __name__ == "__main__":
+    webbrowser.open_new("http://localhost:8000/")
     uvicorn.run(app, host="localhost", port=8000)
