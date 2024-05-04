@@ -17,7 +17,7 @@ jobs:
     - uses: actions/setup-python@v5
       with:
         python-version: 3.12
-    - run: pip install -r requirements.txt Nuitka==2.2
+    - run: pip install -r requirements.txt Nuitka==2.2 imageio==2.34.1
 
     - run: python -m nuitka --standalone --follow-imports --macos-create-app-bundle --macos-app-icon=static/android-chrome-512x512.png main.py
 
