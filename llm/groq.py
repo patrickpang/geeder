@@ -1,12 +1,10 @@
 from typing import AsyncIterator
 
-import keyring
+from dotenv import load_dotenv
 from groq import AsyncGroq
 
-api_key = keyring.get_password("geeder", "groq-api-key")
-if not api_key:
-    raise ValueError("Please set groq-api-key in keyring")
-client = AsyncGroq(api_key=api_key)
+load_dotenv()  # load groq api key
+client = AsyncGroq()
 
 MODEL = "llama3-70b-8192"
 PROMPT = "You are a robot that takes excerpt from textbook as input, and return multiple Anki cards in YAML. Do not talk to user. Card schema is 'question: str, answer: str'"
