@@ -1,3 +1,4 @@
+import os
 import webbrowser
 from typing import Annotated
 
@@ -29,7 +30,13 @@ from fastapi.staticfiles import StaticFiles
 from llm.groq import get_cards
 
 app = FastAPI()
-app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount(
+    "/static",
+    StaticFiles(
+        directory=os.path.join(os.path.dirname(__file__), "static")
+    ),  # works with embedded resources
+    name="static",
+)
 
 
 @app.get("/", response_class=HTMLResponse)

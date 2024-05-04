@@ -19,9 +19,11 @@ jobs:
         python-version: 3.12
     - run: pip install -r requirements.txt pyinstaller==6.6.0
 
-    - run: pyinstaller --onedir --windowed main.py
+    - run: pyinstaller --onedir --windowed --add-data=static:static --add-data=wrapper.bash:. main.py
+    - run: chmod u+x dist/main.app/Contents/MacOS/{main,wrapper.sh}
+    - run: python change_entry_point.py
 
     - uses: actions/upload-artifact@v4
       with:
         name: PyInstaller
-        path: dist/*
+        path: dist/main.app
