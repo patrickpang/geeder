@@ -22,7 +22,7 @@ jobs:
         python-version: 3.11
     - run: pip install -r requirements.txt Nuitka==2.2 imageio==2.34.1
 
-    - run: python -m nuitka --standalone --output-dir=dist main.py
+    - run: python -m nuitka --standalone --macos-create-app-bundle --macos-app-icon=static/android-chrome-512x512.png --output-dir=dist main.py
 
     - uses: actions/upload-artifact@v4
       with:
