@@ -19,7 +19,8 @@ jobs:
         python-version: 3.12
     - run: pip install -r requirements.txt pyinstaller==6.6.0
 
-    - run: pyinstaller --onedir --windowed --add-data=static:static --add-data=wrapper:. main.py
+    - run: pyinstaller --onedir --windowed --add-data=static:static main.py
+    - run: cp wrapper dist/main.app/Contents/MacOS/wrapper
     - run: chmod u+x dist/main.app/Contents/MacOS/{main,wrapper}
     - run: python change_entry_point.py
 
