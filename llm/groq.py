@@ -1,7 +1,9 @@
 from typing import AsyncIterator
 
+from dotenv import load_dotenv
 from groq import AsyncGroq
 
+load_dotenv()  # load groq api key
 client = AsyncGroq()
 
 MODEL = "llama3-70b-8192"
