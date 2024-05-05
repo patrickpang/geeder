@@ -102,7 +102,9 @@ async def home_page() -> str:
                         minlength=10,
                     )
                     with div(_class="text-right"):
-                        with button(type="submit", _class="btn block"):
+                        button("Clear", _class="btn btn-ghost mr-2", type="reset")
+
+                        with button(type="submit", _class="btn"):
                             style(
                                 """
                                 .loading-indicator{
@@ -130,7 +132,7 @@ async def home_page() -> str:
 
             with footer(_class="mt-8 flex justify-between items-center"):
                 p("Made with ❤️ by Patrick", _class="text-sm")
-                p("Version: 2024.05.03", _class="text-sm")
+                p("Version: 2024.05.05", _class="text-sm")
 
             script(src="https://unpkg.com/htmx.org@1.9.12")
 
