@@ -24,7 +24,7 @@ jobs:
 
     - run: python -m nuitka --standalone --macos-create-app-bundle --macos-app-icon=static/android-chrome-512x512.png --include-data-dir=static=static --output-dir=dist main.py
     - run: cp wrapper dist/main.app/Contents/MacOS/wrapper
-    - run: plutil -replace CFBundleExecutable -string wrapper Info.plist
+    - run: plutil -replace CFBundleExecutable -string wrapper dist/main.app/Contents/Info.plist
 
     - uses: actions/upload-artifact@v4
       with:
