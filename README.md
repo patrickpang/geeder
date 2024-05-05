@@ -24,6 +24,7 @@ The web tech stack is a simple server-side rendered architecture:
 * [FastAPI](https://fastapi.tiangolo.com/): types-first web framework with great async performance
 * [Htmx](https://htmx.org/): declarative client side interactivity without JavaScript
 * [Dominate](https://pypi.org/project/dominate/): HTML templating using Python functions
+* [Tailwind](https://tailwindcss.com/): utilty-first CSS framework that makes inline CSS enjoyable
 
 Python is used to develop the prototype of this app in Jupyter Notebook, so most of the code is adapted for the web app.
 
