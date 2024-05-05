@@ -1,5 +1,7 @@
 # Geeder
 
+![Screenshot](https://github.com/patrickpang/geeder/assets/944420/d0172fd2-bbff-499b-b4e6-4fcaff5c3680)
+
 ## Motivation
 
 You are reading a textbook for revision. You have an exam coming up. What would you do?
@@ -9,6 +11,7 @@ Anki! Of course it is great to have some flashcards to remember important facts.
 Try Geeder. We use LLM (Groq for its low latency LPU) to create Anki cards, and add to your existing Anki decks. Copy a section from the textbook, paste into Geeder, and your new cards are just one button away!
 
 ## Installation
+
 
 1. Download from [GitHub Releases](https://github.com/patrickpang/geeder/releases). Currently only macOS app bundle is available for download.
 2. Obtain an API token from [Groq](https://console.groq.com/) and persist it as environment variable `GROQ_API_KEY`. Using macOS as example:
