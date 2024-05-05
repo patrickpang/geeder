@@ -20,7 +20,14 @@ export GROQ_API_KEY=<YOUR_API_KEY_HERE>
 
 ## Web
 
-The web tech stack is a simple server-side rendered architecture with [FastAPI](https://fastapi.tiangolo.com/). [Htmx](https://htmx.org/) is used for client side interactivity without JavaScript. Python is used to develop the prototype of this app in Jupyter Notebook, so most of the code is adapted for the web app.
+The web tech stack is a simple server-side rendered architecture:
+* [FastAPI](https://fastapi.tiangolo.com/): types-first web framework with great async performance
+* [Htmx](https://htmx.org/): declarative client side interactivity without JavaScript
+* [Dominate](https://pypi.org/project/dominate/): HTML templating using Python functions
+
+Python is used to develop the prototype of this app in Jupyter Notebook, so most of the code is adapted for the web app.
+
+This web app is designed to be local first, because integration with Anki via localhost is on the roadmap.
 
 ## LLM
 
