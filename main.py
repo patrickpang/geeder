@@ -24,9 +24,10 @@ from dominate.tags import (
     textarea,
 )
 from fastapi import FastAPI, Form
-from fastapi.responses import HTMLResponse, PlainTextResponse
+from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 
+from anki.anki import Card
 from llm.groq import get_cards
 
 app = FastAPI()
@@ -132,17 +133,17 @@ async def home_page() -> str:
 
             with footer(_class="mt-8 flex justify-between items-center"):
                 p("Made with ❤️ by Patrick", _class="text-sm")
-                p("Version: 2024.05.05", _class="text-sm")
+                p("Version: 2024.09.13", _class="text-sm")
 
             script(src="https://unpkg.com/htmx.org@1.9.12")
 
     return doc.render()
 
 
-@app.post("/generate", response_class=PlainTextResponse)
-async def generate_text(excerpt: Annotated[str, Form()]) -> str:
-    response = await get_cards(excerpt)
-    return response
+@app.post("/generate")
+async def generate_text(excerpt: Annotated[str, Form()]) -> list[Card]:
+    cards = await get_cards(excerpt)
+    return cards
 
 
 if __name__ == "__main__":
