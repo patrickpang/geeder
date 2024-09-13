@@ -35,7 +35,7 @@ This web app is designed to be local first, because integration with Anki via lo
 
 ## LLM
 
-The [prompt](https://github.com/patrickpang/geeder/blob/main/llm/groq.py#L10) we use is relatively simple. YAML has been chosen as the output format instead of plaintext or JSON, because experiments show that LLMs perform better in this particular setting. We also intend to parse the output and create Anki cards directly via AnkiConnect, so a structured output is preferred. Function calling in Groq is in beta and we intend to explore that in the future also.
+The [prompt](https://github.com/patrickpang/geeder/blob/main/llm.py#L14) we use is relatively simple. YAML has been chosen as the output format instead of plaintext or JSON, because experiments show that LLMs perform better in this particular setting. We also intend to parse the output and create Anki cards directly via AnkiConnect, so a structured output is preferred. Function calling in Groq is in beta and we intend to explore that in the future also.
 
 ### Groq
 
@@ -43,7 +43,7 @@ We use Groq for LLM inference API instead of OpenAPI / Claude / Gemini for its l
 
 ### Llama 3
 
-Llama 3 is the state-of-the-art open source LLM as of 2024 May, and we chose the 70b model as experiments showed less hallucination compared to 8b model.
+Llama 3.1 is the state-of-the-art open source LLM as of 2024 Sep, and we chose the 70b model as experiments showed less hallucination compared to 8b model.
 
 ## Develop
 
