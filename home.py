@@ -23,6 +23,7 @@ from fastapi import APIRouter
 from fastapi.responses import HTMLResponse
 
 import llm
+from anki_connect import anki_connect_health_check
 
 router = APIRouter()
 home_endpoint = "/"
@@ -57,7 +58,7 @@ def render_head() -> html_tag:
 
         # tailwind + daisyUI
         link(
-            href="https://cdn.jsdelivr.net/npm/daisyui@4.10.5/dist/full.min.css",
+            href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css",
             rel="stylesheet",
             type="text/css",
         )
@@ -112,6 +113,12 @@ def render_form() -> html_tag:
     return tag
 
 
+def render_anki_disconnect() -> html_tag:
+    with div(role="alert", _class="alert alert-error text-base-100") as tag:
+        span("⚠️ Disconnected from Anki!")
+    return tag
+
+
 def render_footer() -> html_tag:
     with footer(_class="mt-8 flex justify-between items-center") as tag:
         p("Made with ❤️ by Patrick", _class="text-sm")
@@ -121,6 +128,8 @@ def render_footer() -> html_tag:
 
 @router.get(home_endpoint, response_class=HTMLResponse)
 async def homepage() -> str:
+    is_connected = await anki_connect_health_check()
+
     doc = dominate.document(title="Geeder")
 
     with doc:
@@ -130,11 +139,14 @@ async def homepage() -> str:
             render_header()
 
             with main():
-                # TODO: handle error
-                render_form()
-                div(id="card-editors", _class="mt-8")
+                if is_connected:
+                    render_form()
+                    # TODO: handle error
+                    div(id="card-editors", _class="mt-8")
+                else:
+                    render_anki_disconnect()
 
             render_footer()
-            script(src="https://unpkg.com/htmx.org@1.9.12")
+            script(src="https://unpkg.com/htmx.org@2.0.2")
 
     return doc.render()

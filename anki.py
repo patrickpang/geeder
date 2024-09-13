@@ -1,10 +1,12 @@
-from pathlib import Path
-from typing import Any
+from typing import Annotated
 
 import structlog
-from aiohttp import ClientSession
-from dominate.tags import button, div, form, html_tag, input_, textarea
+from dominate.tags import button, div, form, html_tag, input_, span, textarea
+from fastapi import APIRouter, Form
+from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
+
+from anki_connect import anki_connect_call
 
 
 class Card(BaseModel):
@@ -12,50 +14,16 @@ class Card(BaseModel):
     answer: str
 
 
+router = APIRouter()
+add_card_endpoint = "/cards/add"
+
 log = structlog.get_logger()
-
-
-def get_api_url() -> str:
-    is_inside_docker = Path("/.dockerenv").exists()
-    if is_inside_docker:
-        api_url = "http://host.docker.internal:8765"
-    else:
-        api_url = "http://localhost:8765"
-
-    log.info("get_api_url", is_inside_docker=is_inside_docker, api_url=api_url)
-    return api_url
-
-
-api_url = get_api_url()
-
-
-async def anki_connect_health_check(session: ClientSession) -> bool:
-    response = await session.get(api_url, raise_for_status=False)
-    await response.text()
-    is_healthy = response.status == 200
-    return is_healthy
-
-
-async def anki_connect_call(session: ClientSession, action: str, **kwargs) -> Any:
-    payload = {
-        "action": action,
-        "params": kwargs,
-        "version": 6,
-    }
-    log.info("anki_connect_call", action=action, params=kwargs)
-
-    response = await session.post(api_url, json=payload)
-    data = await response.json()
-    if data["error"]:
-        raise RuntimeError(data["error"])
-
-    return data["result"]
 
 
 def render_card_editor(card: Card) -> html_tag:
     with div(_class="card card-bordered	mb-4") as card_editor:
         with div(_class="card-body"):
-            with form():
+            with form(**{"hx-post": add_card_endpoint, "hx-target": "closest .card"}):
                 input_(
                     type="text",
                     name="question",
@@ -88,3 +56,26 @@ def render_card_editors(cards: list[Card]) -> html_tag:
         for card in cards:
             render_card_editor(card)
     return card_editors
+
+
+def render_success_message() -> html_tag:
+    with div(role="alert", _class="alert alert-success text-base-100") as tag:
+        span("✔ Added into Anki successfully!")
+    return tag
+
+
+@router.post(add_card_endpoint, response_class=HTMLResponse)
+async def add_card(
+    question: Annotated[str, Form()], answer: Annotated[str, Form()]
+) -> str:
+    # Ref: https://foosoft.net/projects/anki-connect/index.html#note-actions
+    note = {
+        "deckName": "Default",
+        "modelName": "Basic",
+        "fields": {"Front": question, "Back": answer},
+        "tags": ["geeder"],
+    }
+    log.info("add_card start")
+    response = await anki_connect_call("addNotes", notes=[note])
+    log.info("add_card end", response=response)
+    return render_success_message().render()

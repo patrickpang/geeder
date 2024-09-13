@@ -5,6 +5,7 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
+import anki
 import home
 import llm
 
@@ -18,6 +19,7 @@ app.mount(
 )
 app.include_router(home.router)
 app.include_router(llm.router)
+app.include_router(anki.router)
 
 if __name__ == "__main__":
     webbrowser.open_new("http://localhost:20245/")
