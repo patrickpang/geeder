@@ -13,8 +13,10 @@ from dominate.tags import (
     link,
     main,
     meta,
+    option,
     p,
     script,
+    select,
     span,
     style,
     textarea,
@@ -23,6 +25,7 @@ from fastapi import APIRouter
 from fastapi.responses import HTMLResponse
 
 import llm
+from anki import deck_input_name, get_decks
 from anki_connect import anki_connect_health_check
 
 router = APIRouter()
@@ -79,7 +82,7 @@ def render_header() -> html_tag:
     return tag
 
 
-def render_form() -> html_tag:
+def render_form(deck_names: list[str]) -> html_tag:
     with form(
         **{"hx-post": llm.generate_endpoint, "hx-target": "#card-editors"}
     ) as tag:
@@ -91,25 +94,32 @@ def render_form() -> html_tag:
             required=True,
             minlength=10,
         )
-        with div(_class="text-right"):
-            button("Clear", _class="btn btn-ghost mr-2", type="reset")
 
-            with button(type="submit", _class="btn"):
-                style(
-                    """
-                                .loading-indicator{
-                                    display:none;
-                                }
-                                .htmx-request .loading-indicator{
-                                    display:inline;
-                                }
-                                .htmx-request.loading-indicator{
-                                    display:inline;
-                                }
-                                """
-                )
-                span(_class="loading loading-dots loading-md loading-indicator")
-                span("Submit")
+        with div(_class="flex items-center justify-between"):
+            with div():
+                with select(name=deck_input_name, _class="select select-bordered"):
+                    for deck_name in deck_names:
+                        option(deck_name, value=deck_name)
+
+            with div(_class="flex items-center"):
+                button("Clear", _class="btn btn-ghost mr-2", type="reset")
+
+                with button(type="submit", _class="btn"):
+                    style(
+                        """
+                        .loading-indicator{
+                            display:none;
+                        }
+                        .htmx-request .loading-indicator{
+                            display:inline;
+                        }
+                        .htmx-request.loading-indicator{
+                            display:inline;
+                        }
+                        """
+                    )
+                    span(_class="loading loading-dots loading-md loading-indicator")
+                    span("Submit")
     return tag
 
 
@@ -129,6 +139,7 @@ def render_footer() -> html_tag:
 @router.get(home_endpoint, response_class=HTMLResponse)
 async def homepage() -> str:
     is_connected = await anki_connect_health_check()
+    deck_names = await get_decks()
 
     doc = dominate.document(title="Geeder")
 
@@ -140,13 +151,13 @@ async def homepage() -> str:
 
             with main():
                 if is_connected:
-                    render_form()
+                    render_form(deck_names)
                     # TODO: handle error
                     div(id="card-editors", _class="mt-8")
                 else:
                     render_anki_disconnect()
 
             render_footer()
-            script(src="https://unpkg.com/htmx.org@2.0.2")
+            script(src="https://unpkg.com/htmx.org@1.9.12")
 
     return doc.render()

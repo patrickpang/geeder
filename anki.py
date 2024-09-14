@@ -16,6 +16,7 @@ class Card(BaseModel):
 
 router = APIRouter()
 add_card_endpoint = "/cards/add"
+deck_input_name = "deck"
 
 log = structlog.get_logger()
 
@@ -23,7 +24,13 @@ log = structlog.get_logger()
 def render_card_editor(card: Card) -> html_tag:
     with div(_class="card card-bordered	mb-4") as card_editor:
         with div(_class="card-body"):
-            with form(**{"hx-post": add_card_endpoint, "hx-target": "closest .card"}):
+            with form(
+                **{
+                    "hx-post": add_card_endpoint,
+                    "hx-include": f"[name='{deck_input_name}']",
+                    "hx-target": "closest .card",
+                }
+            ):
                 input_(
                     type="text",
                     name="question",
@@ -64,13 +71,20 @@ def render_success_message() -> html_tag:
     return tag
 
 
+async def get_decks() -> list[str]:
+    deck_names = await anki_connect_call("deckNames")
+    return deck_names
+
+
 @router.post(add_card_endpoint, response_class=HTMLResponse)
 async def add_card(
-    question: Annotated[str, Form()], answer: Annotated[str, Form()]
+    deck: Annotated[str, Form()],
+    question: Annotated[str, Form()],
+    answer: Annotated[str, Form()],
 ) -> str:
     # Ref: https://foosoft.net/projects/anki-connect/index.html#note-actions
     note = {
-        "deckName": "Default",
+        "deckName": deck,
         "modelName": "Basic",
         "fields": {"Front": question, "Back": answer},
         "tags": ["geeder"],

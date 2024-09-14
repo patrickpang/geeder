@@ -40,7 +40,7 @@ async def anki_connect_call(action: str, **kwargs) -> Any:
         "params": kwargs,
         "version": 6,
     }
-    log.info("anki_connect_call", action=action, params=kwargs)
+    log.info("anki_connect_call", action=action)
 
     async with get_client_session() as session:
         response = await session.post(api_url, json=payload)
