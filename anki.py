@@ -29,6 +29,7 @@ def render_card_editor(card: Card) -> html_tag:
                     "hx-post": add_card_endpoint,
                     "hx-include": f"[name='{deck_input_name}']",
                     "hx-target": "closest .card",
+                    "hx-swap": "outerHTML",
                 }
             ):
                 input_(
@@ -66,7 +67,15 @@ def render_card_editors(cards: list[Card]) -> html_tag:
 
 
 def render_success_message() -> html_tag:
-    with div(role="alert", _class="alert alert-success text-base-100") as tag:
+    with div(
+        role="alert",
+        _class="alert alert-success text-base-100",
+        **{
+            "hx-trigger": "load delay:1s",
+            "hx-delete": "data:text/html,",
+            "hx-swap": "outerHTML",
+        },
+    ) as tag:
         span("✔ Added into Anki successfully!")
     return tag
 
