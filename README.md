@@ -41,7 +41,7 @@ The [prompt](https://github.com/patrickpang/geeder/blob/main/llm.py#L14) we use 
 
 We use Groq for LLM inference API instead of OpenAPI / Claude / Gemini for its low latency response over custom-built LPU. The task is essentially relatively simple - text summarization and structured output. No deep domain knowledge or Internet browsing is required.
 
-### Llama 3
+### Llama 3.1
 
 Llama 3.1 is the state-of-the-art open source LLM as of 2024 Sep, and we chose the 70b model as experiments showed less hallucination compared to 8b model.
 
