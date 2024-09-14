@@ -21,6 +21,7 @@ from dominate.tags import (
     style,
     textarea,
 )
+from dominate.util import raw
 from fastapi import APIRouter
 from fastapi.responses import HTMLResponse
 
@@ -132,8 +133,29 @@ def render_anki_disconnect() -> html_tag:
 def render_footer() -> html_tag:
     with footer(_class="mt-8 flex justify-between items-center") as tag:
         p("Made with ❤️ by Patrick", _class="text-sm")
-        p("Version: 2024.09.13", _class="text-sm")
+        p("Version: 2024.09.14", _class="text-sm")
     return tag
+
+
+def add_deck_preference_script() -> html_tag:
+    js = """
+    document.addEventListener('DOMContentLoaded', (e) => {
+        const deckSelector = document.querySelector('select[name="%s"]');
+
+        // Load deck name from local storage if it exists
+        const deckName = localStorage.getItem("geeder/deckName");
+        if (deckName) {
+            deckSelector.value = deckName;
+        }
+
+        // Update local storage when the deck selector changes
+        deckSelector.addEventListener('change', (e) => {
+            const deckName = deckSelector.value;
+            localStorage.setItem("geeder/deckName", deckName);
+        });
+    });
+    """ % (deck_input_name)
+    return script(raw(js))
 
 
 @router.get(home_endpoint, response_class=HTMLResponse)
@@ -158,6 +180,9 @@ async def homepage() -> str:
                     render_anki_disconnect()
 
             render_footer()
+
             script(src="https://unpkg.com/htmx.org@1.9.12")
+            if is_connected:
+                add_deck_preference_script()
 
     return doc.render()
