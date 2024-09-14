@@ -1,10 +1,8 @@
 import dominate
 from dominate.tags import (
     body,
-    button,
     div,
     footer,
-    form,
     h1,
     head,
     header,
@@ -13,21 +11,17 @@ from dominate.tags import (
     link,
     main,
     meta,
-    option,
     p,
     script,
-    select,
     span,
-    style,
-    textarea,
 )
 from dominate.util import raw
 from fastapi import APIRouter
 from fastapi.responses import HTMLResponse
 
-import llm
 from anki import deck_input_name, get_decks
 from anki_connect import anki_connect_health_check
+from llm import render_form
 
 router = APIRouter()
 home_endpoint = "/"
@@ -80,47 +74,6 @@ def render_header() -> html_tag:
             )
             h1("Geeder", _class="text-4xl font-bold")
         p("Your study copilot with Anki cards")
-    return tag
-
-
-def render_form(deck_names: list[str]) -> html_tag:
-    with form(
-        **{"hx-post": llm.generate_endpoint, "hx-target": "#card-editors"}
-    ) as tag:
-        textarea(
-            name="excerpt",
-            placeholder="Enter excerpt from textbook here",
-            _class="textarea textarea-bordered block w-full mb-4",
-            rows=5,
-            required=True,
-            minlength=10,
-        )
-
-        with div(_class="flex items-center justify-between"):
-            with div():
-                with select(name=deck_input_name, _class="select select-bordered"):
-                    for deck_name in deck_names:
-                        option(deck_name, value=deck_name)
-
-            with div(_class="flex items-center"):
-                button("Clear", _class="btn btn-ghost mr-2", type="reset")
-
-                with button(type="submit", _class="btn"):
-                    style(
-                        """
-                        .loading-indicator{
-                            display:none;
-                        }
-                        .htmx-request .loading-indicator{
-                            display:inline;
-                        }
-                        .htmx-request.loading-indicator{
-                            display:inline;
-                        }
-                        """
-                    )
-                    span(_class="loading loading-dots loading-md loading-indicator")
-                    span("Submit")
     return tag
 
 
