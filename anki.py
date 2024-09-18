@@ -59,6 +59,46 @@ def render_card_editor(card: Card) -> html_tag:
     return card_editor
 
 
+def render_new_card_editor() -> html_tag:
+    with div() as new_card_editor:
+        div(id="new-card-status")
+        with div(_class="card card-bordered	mb-4"):
+            with div(_class="card-body"):
+                with form(
+                    **{
+                        "hx-post": add_card_endpoint,
+                        "hx-include": f"[name='{deck_input_name}']",
+                        # unlike card editors, we don't want new card editor to disappear after submit
+                        "hx-target": "#new-card-status",
+                        # but we want the form to reset after success
+                        "hx-on::after-request": "if(event.detail.successful) this.reset()",
+                    }
+                ):
+                    input_(
+                        type="text",
+                        name="question",
+                        placeholder="Question",
+                        _class="input input-bordered block w-full mb-2",
+                    )
+                    textarea(
+                        name="answer",
+                        placeholder="Answer",
+                        _class="textarea textarea-bordered block w-full mb-2",
+                    )
+                    with div(_class="card-actions justify-end"):
+                        button(
+                            "Delete",
+                            _class="btn btn-ghost mr-2",
+                            **{
+                                "hx-delete": "data:text/html,",
+                                "hx-target": "closest .card",
+                                "hx-swap": "outerHTML",
+                            },
+                        )
+                        input_(type="submit", value="Add", _class="btn")
+    return new_card_editor
+
+
 def render_card_editors(cards: list[Card]) -> html_tag:
     with div() as card_editors:
         for card in cards:

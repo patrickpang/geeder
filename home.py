@@ -19,7 +19,7 @@ from dominate.util import raw
 from fastapi import APIRouter
 from fastapi.responses import HTMLResponse
 
-from anki import deck_input_name, get_decks
+from anki import deck_input_name, get_decks, render_new_card_editor
 from anki_connect import anki_connect_health_check
 from llm import render_form
 
@@ -27,7 +27,7 @@ router = APIRouter()
 home_endpoint = "/"
 
 
-def render_head() -> html_tag:
+def render_head(is_connected: bool) -> html_tag:
     with head() as tag:
         # favicons
         # Ref: https://realfavicongenerator.net/
@@ -58,9 +58,16 @@ def render_head() -> html_tag:
         link(
             href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css",
             rel="stylesheet",
-            type="text/css",
         )
         script(src="https://cdn.tailwindcss.com")
+
+        if is_connected:
+            # quill
+            link(
+                href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css",
+                rel="stylesheet",
+            )
+
     return tag
 
 
@@ -119,7 +126,7 @@ async def homepage() -> str:
     doc = dominate.document(title="Geeder")
 
     with doc:
-        render_head()
+        render_head(is_connected)
 
         with body(_class="mx-16 lg:mx-64 mt-16"):
             render_header()
@@ -129,6 +136,7 @@ async def homepage() -> str:
                     render_form(deck_names)
                     # TODO: handle error
                     div(id="card-editors", _class="mt-8")
+                    render_new_card_editor()
                 else:
                     render_anki_disconnect()
 
@@ -136,6 +144,7 @@ async def homepage() -> str:
 
             script(src="https://unpkg.com/htmx.org@1.9.12")
             if is_connected:
+                script(src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js")
                 add_deck_preference_script()
 
     return doc.render()
