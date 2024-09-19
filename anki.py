@@ -1,12 +1,14 @@
 from typing import Annotated
 
 import structlog
-from dominate.tags import button, div, form, html_tag, input_, span, textarea
+from dominate.tags import button, div, form, html_tag, input_, script, span, textarea
+from dominate.util import raw
 from fastapi import APIRouter, Form
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 
 from anki_connect import anki_connect_call
+from util import dummy_delete_endpoint
 
 
 class Card(BaseModel):
@@ -17,6 +19,8 @@ class Card(BaseModel):
 router = APIRouter()
 add_card_endpoint = "/cards/add"
 deck_input_name = "deck"
+card_editor_class = "card-editor"
+quill_container_class = "quill-container"
 
 log = structlog.get_logger()
 
@@ -50,9 +54,9 @@ def render_card_editor(card: Card) -> html_tag:
                         "Delete",
                         _class="btn btn-ghost mr-2",
                         **{
-                            "hx-delete": "data:text/html,",
+                            "hx-delete": dummy_delete_endpoint,
                             "hx-target": "closest .card",
-                            "hx-swap": "outerHTML",
+                            "hx-swap": "delete",
                         },
                     )
                     input_(type="submit", value="Add", _class="btn")
@@ -60,7 +64,7 @@ def render_card_editor(card: Card) -> html_tag:
 
 
 def render_new_card_editor() -> html_tag:
-    with div() as new_card_editor:
+    with div(_class=card_editor_class) as new_card_editor:
         div(id="new-card-status")
         with div(_class="card card-bordered	mb-4"):
             with div(_class="card-body"):
@@ -80,23 +84,44 @@ def render_new_card_editor() -> html_tag:
                         placeholder="Question",
                         _class="input input-bordered block w-full mb-2",
                     )
-                    textarea(
-                        name="answer",
-                        placeholder="Answer",
-                        _class="textarea textarea-bordered block w-full mb-2",
-                    )
-                    with div(_class="card-actions justify-end"):
+
+                    div(_class=quill_container_class)
+
+                    with div(_class="card-actions justify-end mt-2"):
                         button(
                             "Delete",
                             _class="btn btn-ghost mr-2",
                             **{
-                                "hx-delete": "data:text/html,",
+                                "hx-delete": dummy_delete_endpoint,
                                 "hx-target": "closest .card",
-                                "hx-swap": "outerHTML",
+                                "hx-swap": "delete",
                             },
                         )
                         input_(type="submit", value="Add", _class="btn")
     return new_card_editor
+
+
+def add_quill_init_script() -> html_tag:
+    js = """
+    document.addEventListener('DOMContentLoaded', (e) => {
+        const forms = document.querySelectorAll('.%s form');
+        for (const form of forms) {
+            const container = form.querySelector('.%s');
+            // init quill editor
+            const quill = new Quill(container, {
+                theme: 'snow',
+                placeholder: 'Answer',
+            });
+            // append quill content on form submit
+            form.addEventListener('formdata', (event) => {
+                const answer = quill.getSemanticHTML();
+                console.log(answer);
+                event.formData.append('answer', answer);
+            });
+        }
+    });
+    """ % (card_editor_class, quill_container_class)
+    return script(raw(js))
 
 
 def render_card_editors(cards: list[Card]) -> html_tag:
@@ -112,8 +137,8 @@ def render_success_message() -> html_tag:
         _class="alert alert-success text-base-100",
         **{
             "hx-trigger": "load delay:1s",
-            "hx-delete": "data:text/html,",
-            "hx-swap": "outerHTML",
+            "hx-delete": dummy_delete_endpoint,
+            "hx-swap": "delete",
         },
     ) as tag:
         span("✔ Added into Anki successfully!")

@@ -19,7 +19,12 @@ from dominate.util import raw
 from fastapi import APIRouter
 from fastapi.responses import HTMLResponse
 
-from anki import deck_input_name, get_decks, render_new_card_editor
+from anki import (
+    add_quill_init_script,
+    deck_input_name,
+    get_decks,
+    render_new_card_editor,
+)
 from anki_connect import anki_connect_health_check
 from llm import render_form
 
@@ -142,9 +147,10 @@ async def homepage() -> str:
 
             render_footer()
 
-            script(src="https://unpkg.com/htmx.org@1.9.12")
+            script(src="https://unpkg.com/htmx.org@2.0.2")
             if is_connected:
                 script(src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js")
                 add_deck_preference_script()
+                add_quill_init_script()
 
     return doc.render()
