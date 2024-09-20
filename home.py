@@ -106,7 +106,7 @@ def render_footer() -> html_tag:
 
 def add_deck_preference_script() -> html_tag:
     vars = f"const deckInputName = {repr(deck_input_name)};"
-    js = (Path(__file__).parent / "deck_preference.js").read_text()
+    js = (Path(__file__).parent / "resources" / "deck_preference.js").read_text()
     return script(raw(vars + js))
 
 

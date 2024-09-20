@@ -95,7 +95,7 @@ def add_quill_init_script() -> html_tag:
     const cardEditorClass = {repr(card_editor_class)};
     const quillContainerClass = {repr(quill_container_class)};
     """
-    js = (Path(__file__).parent / "quill.js").read_text()
+    js = (Path(__file__).parent / "resources" / "quill.js").read_text()
     return script(raw(vars + js))
 
 
