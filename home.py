@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import dominate
 from dominate.tags import (
     body,
@@ -103,24 +105,9 @@ def render_footer() -> html_tag:
 
 
 def add_deck_preference_script() -> html_tag:
-    js = """
-    document.addEventListener('DOMContentLoaded', (e) => {
-        const deckSelector = document.querySelector('select[name="%s"]');
-
-        // Load deck name from local storage if it exists
-        const deckName = localStorage.getItem("geeder/deckName");
-        if (deckName) {
-            deckSelector.value = deckName;
-        }
-
-        // Update local storage when the deck selector changes
-        deckSelector.addEventListener('change', (e) => {
-            const deckName = deckSelector.value;
-            localStorage.setItem("geeder/deckName", deckName);
-        });
-    });
-    """ % (deck_input_name)
-    return script(raw(js))
+    vars = f"const deckInputName = {repr(deck_input_name)};"
+    js = (Path(__file__).parent / "deck_preference.js").read_text()
+    return script(raw(vars + js))
 
 
 @router.get(home_endpoint, response_class=HTMLResponse)

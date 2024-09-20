@@ -7,6 +7,7 @@
       "label": "Launch dev server",
       "type": "shell",
       "command": "uvicorn main:app --reload --port 20246",
+      "problemMatcher": []
     }
   ]
 }

@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import Annotated
 
 import structlog
@@ -102,26 +103,12 @@ def render_new_card_editor() -> html_tag:
 
 
 def add_quill_init_script() -> html_tag:
-    js = """
-    document.addEventListener('DOMContentLoaded', (e) => {
-        const forms = document.querySelectorAll('.%s form');
-        for (const form of forms) {
-            const container = form.querySelector('.%s');
-            // init quill editor
-            const quill = new Quill(container, {
-                theme: 'snow',
-                placeholder: 'Answer',
-            });
-            // append quill content on form submit
-            form.addEventListener('formdata', (event) => {
-                const answer = quill.getSemanticHTML();
-                console.log(answer);
-                event.formData.append('answer', answer);
-            });
-        }
-    });
-    """ % (card_editor_class, quill_container_class)
-    return script(raw(js))
+    vars = f"""
+    const cardEditorClass = {repr(card_editor_class)};
+    const quillContainerClass = {repr(quill_container_class)};
+    """
+    js = (Path(__file__).parent / "quill.js").read_text()
+    return script(raw(vars + js))
 
 
 def render_card_editors(cards: list[Card]) -> html_tag:
