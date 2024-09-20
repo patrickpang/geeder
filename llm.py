@@ -46,7 +46,7 @@ def render_form(deck_names: list[str]) -> html_tag:
         with div(_class="flex items-center justify-between"):
             with div():
                 with select(
-                    name=deck_input_name, _class="select select-bordered max-w-md"
+                    name=deck_input_name, _class="select select-bordered max-w-sm"
                 ):
                     for deck_name in deck_names:
                         option(deck_name, value=deck_name)
