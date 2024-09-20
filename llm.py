@@ -24,7 +24,7 @@ load_dotenv()  # load groq api key
 client = AsyncGroq()
 
 MODEL = "llama-3.1-70b-versatile"
-PROMPT = "You are a robot that takes excerpt from textbook as input, and return multiple Anki cards. Card schema is 'question: str, answer: str'. Just return list of cards in YAML. No quotes."
+PROMPT = "You are a robot that takes excerpt from textbook as input, and return multiple Anki cards. Card schema is 'question: str, answer: str'. Just return list of cards in YAML. No quotes. Always use English for YAML field names."
 
 router = APIRouter()
 generate_endpoint = "/generate"

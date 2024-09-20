@@ -27,7 +27,7 @@ log = structlog.get_logger()
 
 
 def render_card_editor(card: Card) -> html_tag:
-    with div(_class="card card-bordered	mb-4") as card_editor:
+    with div(_class=f"card card-bordered mb-4 {card_editor_class}") as card_editor:
         with div(_class="card-body"):
             with form(
                 **{
@@ -44,13 +44,10 @@ def render_card_editor(card: Card) -> html_tag:
                     value=card.question,
                     _class="input input-bordered block w-full mb-2",
                 )
-                textarea(
-                    card.answer,
-                    name="answer",
-                    placeholder="Answer",
-                    _class="textarea textarea-bordered block w-full mb-2",
-                )
-                with div(_class="card-actions justify-end"):
+
+                div(card.answer, _class=quill_container_class)
+
+                with div(_class="card-actions justify-end mt-2"):
                     button(
                         "Delete",
                         _class="btn btn-ghost mr-2",
@@ -65,7 +62,7 @@ def render_card_editor(card: Card) -> html_tag:
 
 
 def render_new_card_editor() -> html_tag:
-    with div(_class=card_editor_class) as new_card_editor:
+    with div(_class=card_editor_class) as card_editor:
         div(id="new-card-status")
         with div(_class="card card-bordered	mb-4"):
             with div(_class="card-body"):
@@ -89,17 +86,8 @@ def render_new_card_editor() -> html_tag:
                     div(_class=quill_container_class)
 
                     with div(_class="card-actions justify-end mt-2"):
-                        button(
-                            "Delete",
-                            _class="btn btn-ghost mr-2",
-                            **{
-                                "hx-delete": dummy_delete_endpoint,
-                                "hx-target": "closest .card",
-                                "hx-swap": "delete",
-                            },
-                        )
                         input_(type="submit", value="Add", _class="btn")
-    return new_card_editor
+    return card_editor
 
 
 def add_quill_init_script() -> html_tag:
