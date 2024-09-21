@@ -25,20 +25,19 @@ function initQuill(form) {
   // append quill content on form submit
   form.addEventListener("formdata", (event) => {
     const answer = quill.getSemanticHTML();
-    console.log(answer);
     event.formData.append("answer", answer);
   });
 }
 
-document.addEventListener("DOMContentLoaded", (e) => {
-  const forms = document.querySelectorAll(`.${cardEditorClass} form`);
-  for (const form of forms) {
-    initQuill(form);
-  }
+// init quill for new card editor
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.querySelector("#new-card-editor form");
+  initQuill(form);
 });
 
+// init quill for generated card editor
 htmx.on("htmx:afterSettle", (e) => {
-  const targetContainer = e.target;
+  const targetContainer = e.detail.target;
   const forms = targetContainer.querySelectorAll(`.${cardEditorClass} form`);
   for (const form of forms) {
     initQuill(form);

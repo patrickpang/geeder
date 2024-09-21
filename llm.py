@@ -33,7 +33,10 @@ log = structlog.get_logger()
 
 
 def render_form(deck_names: list[str]) -> html_tag:
-    with form(**{"hx-post": generate_endpoint, "hx-target": "#card-editors"}) as tag:
+    with form(
+        onreset="llmFormReset()",
+        **{"hx-post": generate_endpoint, "hx-target": "#card-editors"},
+    ) as tag:
         textarea(
             name="excerpt",
             placeholder="Enter excerpt from textbook here",

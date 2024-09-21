@@ -62,7 +62,7 @@ def render_card_editor(card: Card) -> html_tag:
 
 
 def render_new_card_editor() -> html_tag:
-    with div(_class=card_editor_class) as card_editor:
+    with div(id="new-card-editor", _class=card_editor_class) as card_editor:
         div(id="new-card-status")
         with div(_class="card card-bordered	mb-4"):
             with div(_class="card-body"):
@@ -73,7 +73,7 @@ def render_new_card_editor() -> html_tag:
                         # unlike card editors, we don't want new card editor to disappear after submit
                         "hx-target": "#new-card-status",
                         # but we want the form to reset after success
-                        "hx-on::after-request": "if(event.detail.successful) this.reset()",
+                        "hx-on::after-request": "newCardEditorFormAfterRequest(event)",
                     }
                 ):
                     input_(

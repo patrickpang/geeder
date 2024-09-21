@@ -139,5 +139,6 @@ async def homepage() -> str:
                 script(src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js")
                 add_deck_preference_script()
                 add_quill_init_script()
+                script(src="/static/reset.js")
 
     return doc.render()
