@@ -16,6 +16,7 @@ from dominate.tags import (
     p,
     script,
     span,
+    style,
 )
 from dominate.util import raw
 from fastapi import APIRouter
@@ -74,6 +75,13 @@ def render_head(is_connected: bool) -> html_tag:
                 href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css",
                 rel="stylesheet",
             )
+            style(
+                """
+                .ql-editor {
+                  font-size: 0.875rem;
+                }
+                """
+            )
 
     return tag
 
@@ -100,7 +108,7 @@ def render_anki_disconnect() -> html_tag:
 def render_footer() -> html_tag:
     with footer(_class="mt-8 flex justify-between items-center") as tag:
         p("Made with ❤️ by Patrick", _class="text-sm")
-        p("Version: 2024.09.20", _class="text-sm")
+        p("Version: 2024.09.22", _class="text-sm")
     return tag
 
 

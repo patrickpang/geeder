@@ -1,7 +1,6 @@
 from typing import Annotated
 
 import structlog
-import yaml
 from dominate.tags import (
     button,
     div,
@@ -24,7 +23,6 @@ load_dotenv()  # load groq api key
 client = AsyncGroq()
 
 MODEL = "llama-3.1-70b-versatile"
-PROMPT = "You are a robot that takes excerpt from textbook as input, and return multiple Anki cards. Card schema is 'question: str, answer: str'. Just return list of cards in YAML. No quotes. Always use English for YAML field names."
 
 router = APIRouter()
 generate_endpoint = "/generate"
@@ -78,15 +76,28 @@ def render_form(deck_names: list[str]) -> html_tag:
 
 async def get_cards(excerpt: str) -> list[Card]:
     log.info("get_cards start", platform="groq", model=MODEL)
+
+    prompt = """
+    <task>Generate multiple anki cards based on <excerpt> from a textbook</task>
+    <excerpt>
+    %s
+    </excerpt>
+    <format>
+        Only return valid ndjson. 
+        One card per line.
+        No markdown.
+        No introduction.
+    </format>
+    <example>
+    {"question": str, "answer": str}
+    </example>
+    """ % (excerpt)
+
     response = await client.chat.completions.create(
         messages=[
             {
-                "role": "system",
-                "content": PROMPT,
-            },
-            {
                 "role": "user",
-                "content": excerpt,
+                "content": prompt,
             },
         ],
         model=MODEL,
@@ -94,8 +105,9 @@ async def get_cards(excerpt: str) -> list[Card]:
 
     payload = response.choices[0].message.content
     print(payload)
-    records = yaml.safe_load(payload)
-    cards = [Card.model_validate(record) for record in records]
+    cards = [
+        Card.model_validate_json(line) for line in payload.splitlines() if line.strip()
+    ]
     log.info("get_cards end", count=len(cards))
     return cards
 
