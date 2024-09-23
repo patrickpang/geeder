@@ -106,9 +106,9 @@ def render_anki_disconnect() -> html_tag:
 
 
 def render_footer() -> html_tag:
-    with footer(_class="mt-8 flex justify-between items-center") as tag:
+    with footer(_class="mt-8 mb-16 flex justify-between items-center") as tag:
         p("Made with ❤️ by Patrick", _class="text-sm")
-        p("Version: 2024.09.22", _class="text-sm")
+        p("Version: 2024.09.23", _class="text-sm")
     return tag
 
 

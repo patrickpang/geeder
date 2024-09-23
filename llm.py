@@ -16,6 +16,7 @@ from dotenv import load_dotenv
 from fastapi import APIRouter, Form
 from fastapi.responses import HTMLResponse
 from groq import AsyncGroq
+from tenacity import retry, stop_after_attempt
 
 from anki import Card, deck_input_name, render_card_editors
 
@@ -74,6 +75,7 @@ def render_form(deck_names: list[str]) -> html_tag:
     return tag
 
 
+@retry(stop=stop_after_attempt(3), reraise=True)
 async def get_cards(excerpt: str) -> list[Card]:
     log.info("get_cards start", platform="groq", model=MODEL)
 

@@ -8,6 +8,12 @@
       "type": "shell",
       "command": "uvicorn main:app --reload --port 20246",
       "problemMatcher": []
+    },
+    {
+      "label": "Refresh pip requirements",
+      "type": "shell",
+      "command": "pip install -r requirements.txt",
+      "problemMatcher": []
     }
   ]
 }
