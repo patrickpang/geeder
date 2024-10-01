@@ -1,3 +1,4 @@
+import os
 from typing import Annotated
 
 import structlog
@@ -15,18 +16,39 @@ from dominate.tags import (
 from dotenv import load_dotenv
 from fastapi import APIRouter, Form
 from fastapi.responses import HTMLResponse
-from groq import AsyncGroq
+from openai import AsyncOpenAI
 from tenacity import retry, stop_after_attempt
 
 from anki import Card, deck_input_name, render_card_editors
 
 load_dotenv()  # load groq api key
-client = AsyncGroq()
-
-MODEL = "llama-3.1-70b-versatile"
+llms = {
+    "groq": {
+        "client": AsyncOpenAI(
+            base_url="https://api.groq.com/openai/v1",
+            api_key=os.environ.get("GROQ_API_KEY"),
+        ),
+        "model": "llama-3.1-70b-versatile",
+    },
+    "samba_nova": {
+        "client": AsyncOpenAI(
+            base_url="https://api.sambanova.ai/v1",
+            api_key=os.environ.get("SAMBA_NOVA_API_KEY"),
+        ),
+        "model": "Meta-Llama-3.1-70B-Instruct",
+    },
+    "kimi": {
+        "client": AsyncOpenAI(
+            base_url="https://api.moonshot.cn/v1",
+            api_key=os.environ.get("MOONSHOT_API_KEY"),
+        ),
+        "model": "moonshot-v1-auto",
+    },
+}
 
 router = APIRouter()
 generate_endpoint = "/generate"
+platform_input_name = "platform"
 
 log = structlog.get_logger()
 
@@ -34,7 +56,11 @@ log = structlog.get_logger()
 def render_form(deck_names: list[str]) -> html_tag:
     with form(
         onreset="llmFormReset()",
-        **{"hx-post": generate_endpoint, "hx-target": "#card-editors"},
+        **{
+            "hx-post": generate_endpoint,
+            "hx-include": f"[name='{platform_input_name}']",
+            "hx-target": "#card-editors",
+        },
     ) as tag:
         textarea(
             name="excerpt",
@@ -76,8 +102,9 @@ def render_form(deck_names: list[str]) -> html_tag:
 
 
 @retry(stop=stop_after_attempt(3), reraise=True)
-async def get_cards(excerpt: str) -> list[Card]:
-    log.info("get_cards start", platform="groq", model=MODEL)
+async def get_cards(excerpt: str, platform: str) -> list[Card]:
+    llm = llms[platform]
+    log.info("get_cards start", platform=platform, model=llm["model"])
 
     prompt = """
     <task>Generate multiple anki cards based on <excerpt> from a textbook</task>
@@ -95,14 +122,14 @@ async def get_cards(excerpt: str) -> list[Card]:
     </example>
     """ % (excerpt)
 
-    response = await client.chat.completions.create(
+    response = await llm["client"].chat.completions.create(
         messages=[
             {
                 "role": "user",
                 "content": prompt,
             },
         ],
-        model=MODEL,
+        model=llm["model"],
     )
 
     payload = response.choices[0].message.content
@@ -115,7 +142,10 @@ async def get_cards(excerpt: str) -> list[Card]:
 
 
 @router.post(generate_endpoint, response_class=HTMLResponse)
-async def generate_text(excerpt: Annotated[str, Form()]) -> str:
-    cards = await get_cards(excerpt)
+async def generate_text(
+    excerpt: Annotated[str, Form()],
+    platform: Annotated[str, Form()],
+) -> str:
+    cards = await get_cards(excerpt, platform)
     card_editors = render_card_editors(cards)
     return card_editors.render()

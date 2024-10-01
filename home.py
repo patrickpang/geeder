@@ -13,8 +13,10 @@ from dominate.tags import (
     link,
     main,
     meta,
+    option,
     p,
     script,
+    select,
     span,
     style,
 )
@@ -29,7 +31,7 @@ from anki import (
     render_new_card_editor,
 )
 from anki_connect import anki_connect_health_check
-from llm import render_form
+from llm import llms, platform_input_name, render_form
 
 router = APIRouter()
 home_endpoint = "/"
@@ -108,13 +110,21 @@ def render_anki_disconnect() -> html_tag:
 def render_footer() -> html_tag:
     with footer(_class="mt-8 mb-16 flex justify-between items-center") as tag:
         p("Made with ❤️ by Patrick", _class="text-sm")
-        p("Version: 2024.09.23", _class="text-sm")
+
+        with select(name=platform_input_name, _class="select max-w-sm"):
+            for llm in llms.keys():
+                option(llm, value=llm)
+
+        p("Version: 2024.10.01", _class="text-sm")
     return tag
 
 
-def add_deck_preference_script() -> html_tag:
-    vars = f"const deckInputName = {repr(deck_input_name)};"
-    js = (Path(__file__).parent / "resources" / "deck_preference.js").read_text()
+def add_persistent_input_script() -> html_tag:
+    vars = f"""
+        const deckInputName = {repr(deck_input_name)}; 
+        const platformInputName = {repr(platform_input_name)};
+    """
+    js = (Path(__file__).parent / "resources" / "persistent_input.js").read_text()
     return script(raw(vars + js))
 
 
@@ -145,7 +155,7 @@ async def homepage() -> str:
             script(src="https://unpkg.com/htmx.org@2.0.2")
             if is_connected:
                 script(src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js")
-                add_deck_preference_script()
+                add_persistent_input_script()
                 add_quill_init_script()
                 script(src="/static/reset.js")
 

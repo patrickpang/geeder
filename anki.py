@@ -2,7 +2,7 @@ from pathlib import Path
 from typing import Annotated
 
 import structlog
-from dominate.tags import button, div, form, html_tag, input_, script, span, textarea
+from dominate.tags import button, div, form, html_tag, input_, script, span
 from dominate.util import raw
 from fastapi import APIRouter, Form
 from fastapi.responses import HTMLResponse

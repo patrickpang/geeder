@@ -1,6 +1,6 @@
 aiohttp[speedups]==3.9.5
 structlog==24.1.0
-groq==0.5.0
+openai==1.50.2
 fastapi==0.110.3
 uvicorn==0.29.0
 dominate==2.9.1
