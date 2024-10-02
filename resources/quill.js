@@ -4,18 +4,10 @@ function initQuill(form) {
   const quill = new Quill(container, {
     theme: "snow",
     placeholder: "Answer",
-    formats: [
-      "bold",
-      "italic",
-      "underline",
-      "strike",
-      "script",
-      "list",
-      "image",
-    ],
+    formats: ["bold", "italic", "underline", "script", "list", "image"],
     modules: {
       toolbar: [
-        ["bold", "italic", "underline", "strike"],
+        ["bold", "italic", "underline"],
         [{ script: "sub" }, { script: "super" }],
         [{ list: "ordered" }, { list: "bullet" }],
         ["image", "clean"],

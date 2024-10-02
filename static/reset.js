@@ -5,7 +5,7 @@ function newCardEditorFormAfterRequest(event) {
 function llmFormReset() {
   // put us next in the event loop after form submit
   setTimeout(() => {
-    loadDeckPreference();
+    loadPersistentInput(deckInputName);
     clearCardEditors();
     clearNewCardEditor();
   }, 0);
@@ -21,6 +21,6 @@ function clearNewCardEditor() {
   form.reset();
 
   const container = form.querySelector(`.${quillContainerClass}`);
-  const quill = new Quill(container);
+  const quill = Quill.find(container);
   quill.setText("");
 }
