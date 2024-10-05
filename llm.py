@@ -30,6 +30,12 @@ llms = {
         ),
         "model": "llama-3.1-70b-versatile",
     },
+    "chatgpt": {
+        "client": AsyncOpenAI(
+            api_key=os.environ.get("OPENAI_API_KEY"),
+        ),
+        "model": "gpt-4o-mini",
+    },
     "samba_nova": {
         "client": AsyncOpenAI(
             base_url="https://api.sambanova.ai/v1",
