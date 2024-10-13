@@ -1,0 +1,8 @@
+@baseUrl = https://geeder.patrickpang.me
+# @baseUrl = http://localhost:3000
+# @baseUrl = http://localhost:8788
+
+###
+GET {{baseUrl}}/users/me
+Content-Type: application/json
+Authorization: Bearer {{$dotenv SAMPLE_API_TOKEN}}
