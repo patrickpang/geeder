@@ -1,29 +1,29 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
-// README at: https://github.com/devcontainers/templates/tree/main/src/python
+// README at: https://github.com/devcontainers/templates/tree/main/src/typescript-node
 {
-	"name": "Python 3.12",
+	"name": "Node.js & TypeScript",
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "mcr.microsoft.com/devcontainers/python:1-3.12-bookworm",
+	"image": "mcr.microsoft.com/devcontainers/typescript-node:1-22-bookworm",
 	"customizations": {
 		"vscode": {
 			"extensions": [
-				"ms-python.python",
-				"ms-toolsai.jupyter",
-				"charliermarsh.ruff",
-				"mhutchie.git-graph"
+				"esbenp.prettier-vscode"
 			]
 		}
 	},
+
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},
+
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	"forwardPorts": [
-		8000
-	],
+	"forwardPorts": [3000, 41265]
+
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "pip3 install --user -r requirements.txt"
+	// "postCreateCommand": "yarn install",
+
 	// Configure tool-specific properties.
 	// "customizations": {},
+
 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
 	// "remoteUser": "root"
 }
