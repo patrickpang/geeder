@@ -23,4 +23,6 @@ export default defineConfig({
       },
     },
   }),
+  // Add middleware to inject cloudfare locally
+  middleware: "./src/lib/cloudfare.ts",
 });

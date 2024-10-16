@@ -1,6 +1,6 @@
-@baseUrl = https://geeder.patrickpang.me
+# @baseUrl = https://geeder.patrickpang.me
 # @baseUrl = http://localhost:3000
-# @baseUrl = http://localhost:8788
+@baseUrl = http://localhost:8788
 
 ###
 GET {{baseUrl}}/users/me
