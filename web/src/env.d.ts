@@ -15,6 +15,7 @@ export interface CfPagesEnv {
   CF_PAGES_URL: string;
 
   // Environment variables
+  GROQ_BASE_URL: string;
   GROQ_API_KEY: string;
 
   // Bindings

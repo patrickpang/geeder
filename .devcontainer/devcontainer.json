@@ -8,7 +8,8 @@
 		"vscode": {
 			"extensions": [
 				"esbenp.prettier-vscode",
-				"humao.rest-client"
+				"humao.rest-client",
+				"tamasfe.even-better-toml"
 			]
 		}
 	},
