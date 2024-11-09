@@ -29,7 +29,6 @@ jobs:
 
       - name: Upload to Deno Deploy
         uses: denoland/deployctl@v1
-        working-directory: ./web
         with:
           project: "geeder"
           entrypoint: "main.ts"
