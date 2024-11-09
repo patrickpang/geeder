@@ -6,7 +6,7 @@ import * as $_404 from "./routes/_404.tsx";
 import * as $_app from "./routes/_app.tsx";
 import * as $index from "./routes/index.tsx";
 import * as $llm_ask from "./routes/llm/ask.ts";
-import * as $Counter from "./islands/Counter.tsx";
+import * as $ExcerptInput from "./islands/ExcerptInput.tsx";
 import type { Manifest } from "$fresh/server.ts";
 
 const manifest = {
@@ -17,7 +17,7 @@ const manifest = {
     "./routes/llm/ask.ts": $llm_ask,
   },
   islands: {
-    "./islands/Counter.tsx": $Counter,
+    "./islands/ExcerptInput.tsx": $ExcerptInput,
   },
   baseUrl: import.meta.url,
 } satisfies Manifest;
