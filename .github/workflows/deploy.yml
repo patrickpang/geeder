@@ -32,4 +32,4 @@ jobs:
         with:
           project: "geeder"
           entrypoint: "main.ts"
-          root: "."
+          root: "./web"
