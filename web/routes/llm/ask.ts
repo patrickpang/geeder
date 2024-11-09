@@ -11,20 +11,20 @@ export const handler: Handlers = {
     const { excerpt } = await request.json();
 
     const prompt = `
-    <task>Generate multiple anki cards based on <excerpt> from a textbook</task>
-    <excerpt>
-    ${excerpt}
-    </excerpt>
-    <format>
-        Only return valid ndjson. 
-        One card per line.
-        No markdown.
-        No introduction.
-    </format>
-    <example>
-    {"question": str, "answer": str}
-    </example>
-  `;
+      <task>Generate multiple anki cards based on <excerpt> from a textbook</task>
+      <excerpt>
+      ${excerpt}
+      </excerpt>
+      <format>
+          Only return valid ndjson. 
+          One card per line.
+          No markdown.
+          No introduction.
+      </format>
+      <example>
+      {"question": str, "answer": str}
+      </example>
+    `;
 
     const client = new OpenAI({
       baseURL: "https://api.groq.com/openai/v1",
