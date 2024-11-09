@@ -1,8 +1,13 @@
 import { FreshContext, Handlers } from "$fresh/server.ts";
 import OpenAI from "openai";
+import { isAuthenticated } from "../../lib/auth.ts";
 
 export const handler: Handlers = {
   async POST(request: Request, _context: FreshContext) {
+    if (!isAuthenticated(request)) {
+      return new Response("Unauthorized", { status: 401 });
+    }
+
     const { excerpt } = await request.json();
 
     const prompt = `
@@ -22,7 +27,7 @@ export const handler: Handlers = {
   `;
 
     const client = new OpenAI({
-      baseURL: Deno.env.get("GROQ_BASE_URL"),
+      baseURL: "https://api.groq.com/openai/v1",
       apiKey: Deno.env.get("GROQ_API_KEY"),
     });
 
