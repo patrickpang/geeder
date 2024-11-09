@@ -17,7 +17,10 @@
 	"customizations": {
 		"vscode": {
 			"extensions": [
-				"denoland.vscode-deno"
+				"denoland.vscode-deno",
+				"bradlc.vscode-tailwindcss",
+				"humao.rest-client",
+				"sourcegraph.cody-ai"
 			]
 		}
 	}
