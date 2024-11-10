@@ -20,6 +20,7 @@ async function generateCards(payload: Payload): Promise<Card[] | null> {
     const response = await fetch("/llm/ask", {
       method: "POST",
       body: JSON.stringify(payload),
+      credentials: "same-origin",
     });
     if (!response.ok) {
       console.error({
@@ -95,5 +96,6 @@ export default function ExcerptInput() {
         </div>
       </div>
     </form>
+    // TODO: show error message here
   );
 }
