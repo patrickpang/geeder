@@ -9,4 +9,7 @@ export default {
     // @ts-ignore: npm import
     daisyui,
   ],
+  daisyui: {
+    themes: ["light"],
+  },
 } satisfies Config;

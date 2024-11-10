@@ -1,6 +1,56 @@
+import { JSX } from "preact/jsx-runtime";
+
+interface Payload {
+  excerpt: string;
+}
+
+interface Card {
+  question: string;
+  answer: string;
+}
+
+function getPayloadFromForm(form: HTMLFormElement): object {
+  const formData = new FormData(form);
+  const payload = Object.fromEntries(formData);
+  return payload;
+}
+
+async function generateCards(payload: Payload): Promise<Card[] | null> {
+  try {
+    const response = await fetch("/llm/ask", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    });
+    if (!response.ok) {
+      console.error({
+        statusCode: response.status,
+        error: await response.text(),
+      });
+      return null;
+    }
+
+    const data = await response.json();
+    const cards = data["cards"];
+    return cards;
+  } catch (error) {
+    console.error({ error });
+    return null;
+  }
+}
+
 export default function ExcerptInput() {
+  const onSubmit: JSX.SubmitEventHandler<HTMLFormElement> = async (
+    e,
+  ) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const payload = getPayloadFromForm(form) as Payload;
+    const cards = await generateCards(payload);
+    console.log({ cards });
+  };
+
   return (
-    <form>
+    <form onSubmit={onSubmit}>
       <textarea
         name="excerpt"
         placeholder="Enter excerpt from textbook here"
