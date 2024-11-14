@@ -29,6 +29,7 @@ export const handler: Handlers = {
     const client = new OpenAI({
       baseURL: "https://api.groq.com/openai/v1",
       apiKey: Deno.env.get("GROQ_API_KEY")!,
+      dangerouslyAllowBrowser: true, // OpenAI library thinks SSR is browser environment
     });
 
     const result = await client.chat.completions.create({

@@ -32,6 +32,10 @@ export default function App({ Component }: PageProps) {
         <meta name="msapplication-TileColor" content="#da532c" />
         <meta name="theme-color" content="#ffffff" />
         <link rel="stylesheet" href="/styles.css" />
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css"
+        />
       </head>
       <body>
         <Component />

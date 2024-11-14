@@ -24,6 +24,9 @@
     "$fresh/": "https://deno.land/x/fresh@1.7.3/",
     "preact": "https://esm.sh/preact@10.22.0",
     "preact/": "https://esm.sh/preact@10.22.0/",
+    "react": "https://esm.sh/preact@10.22.0/compat",
+    "react/": "https://esm.sh/preact@10.22.0/compat/",
+    "react-dom": "https://esm.sh/preact@10.22.0/compat",
     "@preact/signals": "https://esm.sh/*@preact/signals@1.2.2",
     "@preact/signals-core": "https://esm.sh/*@preact/signals-core@1.5.1",
     "tailwindcss": "npm:tailwindcss@3.4.1",
@@ -31,7 +34,9 @@
     "tailwindcss/plugin": "npm:/tailwindcss@3.4.1/plugin.js",
     "$std/": "https://deno.land/std@0.216.0/",
     "openai": "https://deno.land/x/openai@v4.69.0/mod.ts",
-    "daisyui": "npm:daisyui@4.12.14"
+    "daisyui": "npm:daisyui@4.12.14",
+    "quill": "npm:quill@2.0.2",
+    "ssr-window": "npm:ssr-window@4.0.2"
   },
   "compilerOptions": {
     "jsx": "react-jsx",

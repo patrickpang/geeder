@@ -2,8 +2,8 @@ import { FreshContext, Handlers } from "$fresh/server.ts";
 import { clearTokenInCookies } from "../lib/auth.ts";
 
 export const handler: Handlers = {
-  async GET(request: Request, ctx: FreshContext) {
-    const response = await ctx.render();
+  async GET(request: Request, context: FreshContext) {
+    const response = await context.render();
     clearTokenInCookies(request, response);
     return response;
   },

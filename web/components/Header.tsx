@@ -1,13 +1,13 @@
 export default function Header() {
   return (
-    <header className="mb-8">
-      <div className="flex items-center mb-2">
+    <header class="mb-8">
+      <div class="flex items-center mb-2">
         <img
           src="/android-chrome-512x512.png"
           alt="Geeder"
-          className="w-12 mr-2"
+          class="w-12 mr-2"
         />
-        <h1 className="text-4xl font-bold">Geeder</h1>
+        <h1 class="text-4xl font-bold">Geeder</h1>
       </div>
       <p>Your study copilot with Anki cards</p>
     </header>

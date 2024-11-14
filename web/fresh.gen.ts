@@ -9,6 +9,7 @@ import * as $index from "./routes/index.tsx";
 import * as $llm_ask from "./routes/llm/ask.ts";
 import * as $login from "./routes/login.tsx";
 import * as $logout from "./routes/logout.tsx";
+import * as $CardsEditor from "./islands/CardsEditor.tsx";
 import * as $ExcerptInput from "./islands/ExcerptInput.tsx";
 import * as $LoginForm from "./islands/LoginForm.tsx";
 import type { Manifest } from "$fresh/server.ts";
@@ -24,6 +25,7 @@ const manifest = {
     "./routes/logout.tsx": $logout,
   },
   islands: {
+    "./islands/CardsEditor.tsx": $CardsEditor,
     "./islands/ExcerptInput.tsx": $ExcerptInput,
     "./islands/LoginForm.tsx": $LoginForm,
   },

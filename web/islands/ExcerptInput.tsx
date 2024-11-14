@@ -1,12 +1,13 @@
+import { Signal } from "@preact/signals";
 import { JSX } from "preact/jsx-runtime";
+import { Card } from "../lib/model.ts";
 
 interface Payload {
   excerpt: string;
 }
 
-interface Card {
-  question: string;
-  answer: string;
+interface Props {
+  cardsSignal: Signal<Card[]>;
 }
 
 async function generateCards(payload: Payload): Promise<Card[] | null> {
@@ -33,7 +34,7 @@ async function generateCards(payload: Payload): Promise<Card[] | null> {
   }
 }
 
-export default function ExcerptInput() {
+export default function ExcerptInput({ cardsSignal }: Props) {
   const onSubmit: JSX.SubmitEventHandler<HTMLFormElement> = async (
     e,
   ) => {
@@ -42,7 +43,9 @@ export default function ExcerptInput() {
     const formData = new FormData(form);
     const payload = (Object.fromEntries(formData) as object) as Payload;
     const cards = await generateCards(payload);
-    console.log({ cards });
+    if (cards) {
+      cardsSignal.value = cards;
+    }
   };
 
   return (
@@ -50,18 +53,18 @@ export default function ExcerptInput() {
       <textarea
         name="excerpt"
         placeholder="Enter excerpt from textbook here"
-        className="textarea textarea-bordered block w-full mb-4"
+        class="textarea textarea-bordered block w-full mb-4"
         rows={5}
         required
         minLength={10}
       />
 
-      <div className="flex items-center justify-between">
+      <div class="flex items-center justify-between">
         {
           /* <div>
           <select
             name={deckInputName}
-            className="select select-bordered max-w-sm"
+            class="select select-bordered max-w-sm"
           >
             {deckNames.map((deckName) => (
               <option key={deckName} value={deckName}>
@@ -73,19 +76,19 @@ export default function ExcerptInput() {
         }
         <div></div>
 
-        <div className="flex items-center">
+        <div class="flex items-center">
           <button
             type="reset"
-            className="btn btn-ghost mr-2"
+            class="btn btn-ghost mr-2"
           >
             Clear
           </button>
 
           <button
             type="submit"
-            className="btn"
+            class="btn"
           >
-            <span className="loading loading-dots loading-md loading-indicator" />
+            <span class="loading loading-dots loading-md loading-indicator" />
             <span>Submit</span>
           </button>
         </div>

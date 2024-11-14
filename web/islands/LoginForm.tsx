@@ -63,7 +63,7 @@ export default function LoginForm() {
       </label>
       <button
         type="submit"
-        className="btn mt-4"
+        class="btn mt-4"
       >
         <span>Submit</span>
       </button>
