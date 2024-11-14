@@ -9,12 +9,6 @@ interface Card {
   answer: string;
 }
 
-function getPayloadFromForm(form: HTMLFormElement): object {
-  const formData = new FormData(form);
-  const payload = Object.fromEntries(formData);
-  return payload;
-}
-
 async function generateCards(payload: Payload): Promise<Card[] | null> {
   try {
     const response = await fetch("/llm/ask", {
@@ -45,7 +39,8 @@ export default function ExcerptInput() {
   ) => {
     e.preventDefault();
     const form = e.currentTarget;
-    const payload = getPayloadFromForm(form) as Payload;
+    const formData = new FormData(form);
+    const payload = (Object.fromEntries(formData) as object) as Payload;
     const cards = await generateCards(payload);
     console.log({ cards });
   };

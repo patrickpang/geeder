@@ -10,7 +10,6 @@ export const handler: Handlers = {
   async POST(request: Request, _context: FreshContext) {
     // already logged in
     const existingUsername = getUsernameFromRequest(request);
-    console.log({ existingUsername });
     if (existingUsername !== null) {
       return Response.json({ success: true, message: "Already logged in" });
     }

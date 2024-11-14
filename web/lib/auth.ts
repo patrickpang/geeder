@@ -1,4 +1,12 @@
-import { Cookie, getCookies, setCookie } from "$std/http/cookie.ts";
+import {
+  Cookie,
+  deleteCookie,
+  getCookies,
+  setCookie,
+} from "$std/http/cookie.ts";
+
+const TOKEN_KEY = "token";
+
 function getUsernameFromToken(token: string): string | null {
   // TODO: tokens table
   if (token === Deno.env.get("DUMMY_API_TOKEN")!) {
@@ -47,13 +55,29 @@ export function setTokenInCookies(
 ): void {
   const url = new URL(request.url);
   const cookie: Cookie = {
-    name: "token",
+    name: TOKEN_KEY,
     value: token,
     maxAge: 34560000, // 400 days, max Chrome allows
     sameSite: "Strict",
     domain: url.hostname,
     secure: true,
     httpOnly: true,
+    path: "/", // for ajax requests to work
   };
   setCookie(headers, cookie);
+}
+
+export function clearTokenInCookies(
+  request: Request,
+  response: Response,
+): void {
+  const url = new URL(request.url);
+  const headers = new Headers(request.headers);
+
+  deleteCookie(headers, TOKEN_KEY, {
+    domain: url.hostname,
+    path: "/",
+  });
+
+  response.headers.set("set-cookie", headers.get("set-cookie")!);
 }
