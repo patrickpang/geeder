@@ -22,6 +22,7 @@
   ],
   "imports": {
     "$fresh/": "https://deno.land/x/fresh@1.7.3/",
+    "@libsql/client": "npm:@libsql/client@^0.14.0",
     "preact": "https://esm.sh/preact@10.22.0",
     "preact/": "https://esm.sh/preact@10.22.0/",
     "react": "https://esm.sh/preact@10.22.0/compat",
