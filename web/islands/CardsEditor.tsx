@@ -3,7 +3,7 @@ import "../lib/ssr.ts";
 import { IS_BROWSER } from "$fresh/runtime.ts";
 import { Signal } from "@preact/signals";
 import { useEffect, useRef } from "preact/hooks";
-import Quill from "quill";
+// import Quill from "quill";
 import { Card } from "../lib/model.ts";
 
 interface CardEditorProps {
@@ -17,23 +17,23 @@ function CardEditor({ card }: CardEditorProps) {
 
   const quillRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (!quillRef.current) return;
+  // useEffect(() => {
+  //   if (!quillRef.current) return;
 
-    const quill = new Quill(quillRef.current, {
-      theme: "snow",
-      placeholder: "Answer",
-      formats: ["bold", "italic", "underline", "script", "list", "image"],
-      modules: {
-        toolbar: [
-          ["bold", "italic", "underline"],
-          [{ script: "sub" }, { script: "super" }],
-          [{ list: "ordered" }, { list: "bullet" }],
-          ["image", "clean"],
-        ],
-      },
-    });
-  }, []);
+  //   const quill = new Quill(quillRef.current, {
+  //     theme: "snow",
+  //     placeholder: "Answer",
+  //     formats: ["bold", "italic", "underline", "script", "list", "image"],
+  //     modules: {
+  //       toolbar: [
+  //         ["bold", "italic", "underline"],
+  //         [{ script: "sub" }, { script: "super" }],
+  //         [{ list: "ordered" }, { list: "bullet" }],
+  //         ["image", "clean"],
+  //       ],
+  //     },
+  //   });
+  // }, []);
 
   return (
     <div class="card card-bordered mb-4">
