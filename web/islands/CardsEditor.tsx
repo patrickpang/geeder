@@ -17,7 +17,7 @@ function CardEditor({ card }: CardEditorProps) {
   useEffect(async () => {
     if (!quillRef.current) return;
 
-    const Quill = (await import("https://esm.sh/quill@2.0.2")).default;
+    const Quill = (await import("quill")).default;
 
     const quill = new Quill(quillRef.current, {
       theme: "snow",
