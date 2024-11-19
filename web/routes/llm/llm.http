@@ -4,7 +4,6 @@
 ###
 POST {{baseUrl}}/llm/ask
 Content-Type: application/json
-Authorization: Bearer {{$dotenv DUMMY_API_TOKEN}}
 
 {
   "excerpt": "The Web Crypto API provides a set of low-level functions for common cryptographic tasks. The Workers runtime implements the full surface of this API, but with some differences in the supported algorithms compared to those implemented in most browsers. Performing cryptographic operations using the Web Crypto API is significantly faster than performing them purely in JavaScript. If you want to perform CPU-intensive cryptographic operations, you should consider using the Web Crypto API. The Web Crypto API is implemented through the SubtleCrypto interface, accessible via the global crypto.subtle binding."

@@ -12,7 +12,7 @@ interface LoginResponse {
 
 async function login(payload: Payload): Promise<LoginResponse | null> {
   try {
-    const response = await fetch("/api/login", {
+    const response = await fetch("/auth/login", {
       method: "POST",
       body: JSON.stringify(payload),
       credentials: "same-origin",

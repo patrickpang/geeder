@@ -43,7 +43,7 @@ export default function ExcerptInput({ cardsSignal }: Props) {
     const formData = new FormData(form);
     const payload = (Object.fromEntries(formData) as object) as Payload;
     const cards = await generateCards(payload);
-    if (cards) {
+    if (cards !== null) {
       cardsSignal.value = cards;
     }
   };

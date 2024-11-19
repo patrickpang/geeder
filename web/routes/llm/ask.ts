@@ -1,14 +1,20 @@
 import { FreshContext, Handlers } from "$fresh/server.ts";
+import { nanoid } from "nanoid";
 import OpenAI from "openai";
-import { getUsernameFromRequest } from "../../lib/auth.ts";
+import { getUserIdFromRequest } from "../../lib/auth.ts";
+import { Card } from "../../lib/model.ts";
+
+interface Payload {
+  excerpt: string;
+}
 
 export const handler: Handlers = {
   async POST(request: Request, _context: FreshContext) {
-    if (getUsernameFromRequest(request) === null) {
+    if (getUserIdFromRequest(request) === null) {
       return new Response("Unauthorized", { status: 401 });
     }
 
-    const { excerpt } = await request.json();
+    const { excerpt } = await request.json() as Payload;
 
     const prompt = `
       <task>Generate multiple anki cards based on <excerpt> from a textbook</task>
@@ -41,7 +47,7 @@ export const handler: Handlers = {
     const cards = response
       .split("\n")
       .filter((line) => line.trim() !== "")
-      .map((line) => JSON.parse(line));
+      .map((line) => ({ ...JSON.parse(line), id: nanoid() } as Card));
 
     return Response.json({ success: true, cards });
   },

@@ -4,14 +4,14 @@ import Footer from "../components/Footer.tsx";
 import Header from "../components/Header.tsx";
 import CardsEditor from "../islands/CardsEditor.tsx";
 import ExcerptInput from "../islands/ExcerptInput.tsx";
-import { getUsernameFromRequest } from "../lib/auth.ts";
+import { getUserIdFromRequest } from "../lib/auth.ts";
 import { Card } from "../lib/model.ts";
 
 export const handler: Handlers = {
   async GET(request: Request, context: FreshContext) {
     // redirect to login page if not logged in
-    const username = getUsernameFromRequest(request);
-    if (username === null) {
+    const userId = getUserIdFromRequest(request);
+    if (userId === null) {
       const headers = new Headers();
       headers.set("location", "/login");
       return new Response(null, {

@@ -3,8 +3,9 @@ import { State } from "./_middleware.ts";
 
 export default async function Admin(
   _request: Request,
-  context: RouteContext<State>,
+  context: RouteContext<void, State>,
 ) {
+  context.data;
   const result = await context.state.turso.execute(
     "select sqlite_version() as sqlite_version",
   );

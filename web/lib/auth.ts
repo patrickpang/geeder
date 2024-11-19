@@ -7,7 +7,7 @@ import {
 
 const TOKEN_KEY = "token";
 
-function getUsernameFromToken(token: string): string | null {
+function getUserIdFromToken(token: string): string | null {
   // TODO: tokens table
   if (token === Deno.env.get("DUMMY_API_TOKEN")!) {
     return "dudu";
@@ -16,19 +16,19 @@ function getUsernameFromToken(token: string): string | null {
   return null;
 }
 
-export function getUsernameFromRequest(request: Request): string | null {
+export function getUserIdFromRequest(request: Request): string | null {
   const cookies = getCookies(request.headers);
   const token = cookies["token"];
   if (!token) {
     return null;
   }
 
-  const username = getUsernameFromToken(token);
-  if (username === null) {
+  const userId = getUserIdFromToken(token);
+  if (userId === null) {
     return null;
   }
 
-  return username;
+  return userId;
 }
 
 export function checkCredentials(
@@ -43,7 +43,7 @@ export function checkCredentials(
   return false;
 }
 
-export function generateToken(username: string): string {
+export function generateToken(userId: string): string {
   // TODO: tokens table
   return Deno.env.get("DUMMY_API_TOKEN")!;
 }

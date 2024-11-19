@@ -2,15 +2,15 @@ import { FreshContext, Handlers } from "$fresh/server.ts";
 import {
   checkCredentials,
   generateToken,
-  getUsernameFromRequest,
+  getUserIdFromRequest,
   setTokenInCookies,
 } from "../../lib/auth.ts";
 
 export const handler: Handlers = {
   async POST(request: Request, _context: FreshContext) {
     // already logged in
-    const existingUsername = getUsernameFromRequest(request);
-    if (existingUsername !== null) {
+    const userId = getUserIdFromRequest(request);
+    if (userId !== null) {
       return Response.json({ success: true, message: "Already logged in" });
     }
 
@@ -22,6 +22,7 @@ export const handler: Handlers = {
     }
 
     // set cookies
+    // TODO: pass userId
     const token = generateToken(username);
     const headers = new Headers();
     setTokenInCookies(request, headers, token);
