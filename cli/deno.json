@@ -1,0 +1,21 @@
+{
+  "lock": false,
+  "tasks": {
+    "check": "deno fmt --check && deno lint && deno check **/*.ts",
+    "start": "deno run -A main.ts",
+    "build": "deno compile -A main.ts"
+  },
+  "lint": {
+    "rules": {
+      "tags": [
+        "recommended"
+      ]
+    }
+  },
+
+  "imports": {
+    "$std/": "https://deno.land/std@0.216.0/",
+    "fetch-cookie": "npm:fetch-cookie@^3.0.1"
+  },
+  "nodeModulesDir": "auto"
+}
