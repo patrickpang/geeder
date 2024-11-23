@@ -8,6 +8,7 @@ import * as $_middleware from "./routes/_middleware.ts";
 import * as $admin from "./routes/admin.tsx";
 import * as $auth_login from "./routes/auth/login.ts";
 import * as $cards_create from "./routes/cards/create.ts";
+import * as $cards_delete from "./routes/cards/delete.ts";
 import * as $cards_pull from "./routes/cards/pull.ts";
 import * as $index from "./routes/index.tsx";
 import * as $llm_ask from "./routes/llm/ask.ts";
@@ -26,6 +27,7 @@ const manifest = {
     "./routes/admin.tsx": $admin,
     "./routes/auth/login.ts": $auth_login,
     "./routes/cards/create.ts": $cards_create,
+    "./routes/cards/delete.ts": $cards_delete,
     "./routes/cards/pull.ts": $cards_pull,
     "./routes/index.tsx": $index,
     "./routes/llm/ask.ts": $llm_ask,
