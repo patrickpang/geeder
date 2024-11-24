@@ -13,6 +13,7 @@ interface DeleteCardsResponse {
 
 export async function pullCards(): Promise<Card[] | null> {
   try {
+    console.info("pullCards start");
     const response = await fetchWithCookies(baseUrl + "/cards/pull", {
       credentials: "same-origin",
     });
@@ -25,6 +26,7 @@ export async function pullCards(): Promise<Card[] | null> {
     }
 
     const { cards } = (await response.json()) as PullCardsResponse;
+    console.info("pullCards end", { cards });
     return cards;
   } catch (error) {
     console.error({ error });
@@ -34,6 +36,7 @@ export async function pullCards(): Promise<Card[] | null> {
 
 export async function deleteCards(cardIds: string[]): Promise<number | null> {
   try {
+    console.info("deleteCards start");
     const response = await fetchWithCookies(baseUrl + "/cards/delete", {
       method: "POST",
       body: JSON.stringify({ cardIds }),
@@ -48,6 +51,7 @@ export async function deleteCards(cardIds: string[]): Promise<number | null> {
     }
 
     const { rowsDeleted } = (await response.json()) as DeleteCardsResponse;
+    console.info("pullCards end", { rowsDeleted });
     return rowsDeleted;
   } catch (error) {
     console.error({ error });
