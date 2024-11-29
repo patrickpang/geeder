@@ -40,7 +40,7 @@ export const handler: Handlers = {
 
     const result = await client.chat.completions.create({
       messages: [{ role: "user", content: prompt }],
-      model: "llama-3.2-90b-text-preview",
+      model: "llama-3.2-90b-vision-preview",
     });
     const response = result.choices[0].message.content!;
 

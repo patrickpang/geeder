@@ -1,4 +1,4 @@
-import { Signal } from "@preact/signals";
+import { Signal, useSignal } from "@preact/signals";
 import { JSX } from "preact/jsx-runtime";
 import { Card } from "../lib/model.ts";
 
@@ -35,9 +35,13 @@ async function generateCards(payload: Payload): Promise<Card[] | null> {
 }
 
 export default function ExcerptInput({ cardsSignal }: Props) {
+  const stateSignal = useSignal<"input" | "submit">("input");
+
   const onSubmit: JSX.SubmitEventHandler<HTMLFormElement> = async (
     e,
   ) => {
+    stateSignal.value = "submit";
+
     e.preventDefault();
     const form = e.currentTarget;
     const formData = new FormData(form);
@@ -46,10 +50,16 @@ export default function ExcerptInput({ cardsSignal }: Props) {
     if (cards !== null) {
       cardsSignal.value = cards;
     }
+
+    stateSignal.value = "input";
+  };
+
+  const onReset: JSX.GenericEventHandler<HTMLFormElement> = (_e) => {
+    cardsSignal.value = [];
   };
 
   return (
-    <form onSubmit={onSubmit}>
+    <form onSubmit={onSubmit} onReset={onReset}>
       <textarea
         name="excerpt"
         placeholder="Enter excerpt from textbook here"
@@ -87,8 +97,11 @@ export default function ExcerptInput({ cardsSignal }: Props) {
           <button
             type="submit"
             class="btn"
+            disabled={stateSignal.value === "submit"}
           >
-            <span class="loading loading-dots loading-md loading-indicator" />
+            {stateSignal.value === "submit" && (
+              <span class="loading loading-dots loading-md loading-indicator" />
+            )}
             <span>Submit</span>
           </button>
         </div>
