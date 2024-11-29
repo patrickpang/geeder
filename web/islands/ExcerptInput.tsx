@@ -35,12 +35,12 @@ async function generateCards(payload: Payload): Promise<Card[] | null> {
 }
 
 export default function ExcerptInput({ cardsSignal }: Props) {
-  const stateSignal = useSignal<"input" | "submit">("input");
+  const stateSignal = useSignal<"editing" | "submitting">("editing");
 
   const onSubmit: JSX.SubmitEventHandler<HTMLFormElement> = async (
     e,
   ) => {
-    stateSignal.value = "submit";
+    stateSignal.value = "submitting";
 
     e.preventDefault();
     const form = e.currentTarget;
@@ -51,7 +51,7 @@ export default function ExcerptInput({ cardsSignal }: Props) {
       cardsSignal.value = cards;
     }
 
-    stateSignal.value = "input";
+    stateSignal.value = "editing";
   };
 
   const onReset: JSX.GenericEventHandler<HTMLFormElement> = (_e) => {
@@ -97,9 +97,9 @@ export default function ExcerptInput({ cardsSignal }: Props) {
           <button
             type="submit"
             class="btn"
-            disabled={stateSignal.value === "submit"}
+            disabled={stateSignal.value === "submitting"}
           >
-            {stateSignal.value === "submit" && (
+            {stateSignal.value === "submitting" && (
               <span class="loading loading-dots loading-md loading-indicator" />
             )}
             <span>Submit</span>
