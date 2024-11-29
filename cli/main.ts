@@ -21,12 +21,13 @@ console.info("login success");
 
 while (true) {
   const cards = await pullCards();
-  if (!cards) Deno.exit(1);
+  if (cards === null) Deno.exit(1);
   if (cards.length === 0) {
     console.info("sync complete");
     Deno.exit(0);
   }
 
-  await addCards("Default", cards);
-  await deleteCards(cards.map((card) => card.id));
+  const cardIds = await addCards("Default", cards);
+  if (cardIds === null) Deno.exit(1);
+  await deleteCards(cardIds);
 }
