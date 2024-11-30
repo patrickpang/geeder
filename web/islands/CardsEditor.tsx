@@ -3,10 +3,11 @@ import { Signal, useSignal } from "@preact/signals";
 import { useEffect, useRef } from "preact/hooks";
 import { JSX } from "preact/jsx-runtime";
 import type Quill from "quill";
-import { Card } from "../lib/model.ts";
+import { Card, generateEmptyCard } from "../lib/model.ts";
 
 interface CardEditorProps {
   card: Card;
+  onComplete?: () => void;
 }
 
 async function createCards(payload: Card): Promise<void | null> {
@@ -32,12 +33,12 @@ async function createCards(payload: Card): Promise<void | null> {
   }
 }
 
-function CardEditor({ card }: CardEditorProps) {
+function CardEditor({ card, onComplete }: CardEditorProps) {
   if (!IS_BROWSER) {
     return null;
   }
 
-  const state = useSignal<
+  const stateSignal = useSignal<
     "editing" | "submitting" | "success" | "error"
   >(
     "editing",
@@ -64,11 +65,14 @@ function CardEditor({ card }: CardEditorProps) {
         ],
       },
     });
+
+    quillRef.current.setText(card.answer);
   }, []);
 
   const onSubmit: JSX.SubmitEventHandler<HTMLFormElement> = async (
     e,
   ) => {
+    stateSignal.value = "submitting";
     e.preventDefault();
     const form = e.currentTarget;
     const formData = new FormData(form);
@@ -80,12 +84,19 @@ function CardEditor({ card }: CardEditorProps) {
     } as Card;
     const result = await createCards(payload);
     if (result !== null) {
-      state.value = "success";
+      stateSignal.value = "success";
+    } else {
+      stateSignal.value = "error";
+    }
+    if (onComplete) {
+      onComplete();
     }
   };
 
-  switch (state.value) {
+  switch (stateSignal.value) {
     case "editing":
+    case "submitting":
+    case "error":
       return (
         <div class="card card-bordered mb-4">
           <div class="card-body">
@@ -95,17 +106,23 @@ function CardEditor({ card }: CardEditorProps) {
                 name="question"
                 placeholder="Question"
                 value={card.question}
+                required
                 class="input input-bordered block w-full mb-2"
               />
 
-              <div ref={quillContainerRef}>{card.answer}</div>
+              <div ref={quillContainerRef}></div>
 
               <div class="card-actions justify-end mt-2">
-                <input
+                <button
                   type="submit"
-                  value="Add"
                   class="btn"
-                />
+                  disabled={stateSignal.value === "submitting"}
+                >
+                  {stateSignal.value === "submitting" && (
+                    <span class="loading loading-dots loading-md loading-indicator" />
+                  )}
+                  <span>Add</span>
+                </button>
               </div>
             </form>
           </div>
@@ -129,14 +146,40 @@ function CardEditor({ card }: CardEditorProps) {
 
 interface CardsEditorProps {
   cardsSignal: Signal<Card[]>;
+  customCardSignal: Signal<Card>;
 }
 
-export default function CardsEditor({ cardsSignal }: CardsEditorProps) {
+export default function CardsEditor(
+  { cardsSignal, customCardSignal }: CardsEditorProps,
+) {
   const cards = cardsSignal.value;
+  const deleteCard = (card: Card) => {
+    setTimeout(() => {
+      cardsSignal.value = cardsSignal.value.filter((c) => c.id !== card.id);
+    }, 1000);
+  };
+
+  const customCard = customCardSignal.value;
+  const refreshCustomCard = () => {
+    setTimeout(() => {
+      customCardSignal.value = generateEmptyCard();
+    }, 1000);
+  };
 
   return (
     <div class="mt-8">
-      {cards.map((card) => <CardEditor card={card} />)}
+      {cards.map((card) => (
+        <CardEditor
+          key={card.id}
+          card={card}
+          onComplete={() => deleteCard(card)}
+        />
+      ))}
+      <CardEditor
+        key={customCard.id}
+        card={customCard}
+        onComplete={refreshCustomCard}
+      />
     </div>
   );
 }

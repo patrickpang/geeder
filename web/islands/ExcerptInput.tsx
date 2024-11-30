@@ -1,6 +1,6 @@
 import { Signal, useSignal } from "@preact/signals";
 import { JSX } from "preact/jsx-runtime";
-import { Card } from "../lib/model.ts";
+import { Card, generateEmptyCard } from "../lib/model.ts";
 
 interface Payload {
   excerpt: string;
@@ -8,6 +8,7 @@ interface Payload {
 
 interface Props {
   cardsSignal: Signal<Card[]>;
+  customCardSignal: Signal<Card>;
 }
 
 async function generateCards(payload: Payload): Promise<Card[] | null> {
@@ -34,7 +35,7 @@ async function generateCards(payload: Payload): Promise<Card[] | null> {
   }
 }
 
-export default function ExcerptInput({ cardsSignal }: Props) {
+export default function ExcerptInput({ cardsSignal, customCardSignal }: Props) {
   const stateSignal = useSignal<"editing" | "submitting">("editing");
 
   const onSubmit: JSX.SubmitEventHandler<HTMLFormElement> = async (
@@ -56,6 +57,7 @@ export default function ExcerptInput({ cardsSignal }: Props) {
 
   const onReset: JSX.GenericEventHandler<HTMLFormElement> = (_e) => {
     cardsSignal.value = [];
+    customCardSignal.value = generateEmptyCard();
   };
 
   return (
@@ -102,7 +104,7 @@ export default function ExcerptInput({ cardsSignal }: Props) {
             {stateSignal.value === "submitting" && (
               <span class="loading loading-dots loading-md loading-indicator" />
             )}
-            <span>Submit</span>
+            <span>Generate</span>
           </button>
         </div>
       </div>

@@ -5,7 +5,7 @@ import Header from "../components/Header.tsx";
 import CardsEditor from "../islands/CardsEditor.tsx";
 import ExcerptInput from "../islands/ExcerptInput.tsx";
 import { getUserIdFromRequest } from "../lib/auth.ts";
-import { Card } from "../lib/model.ts";
+import { Card, generateEmptyCard } from "../lib/model.ts";
 
 export const handler: Handlers = {
   async GET(request: Request, context: FreshContext) {
@@ -28,12 +28,19 @@ export const handler: Handlers = {
 
 export default function Home() {
   const cardsSignal: Signal<Card[]> = useSignal([]);
+  const customCardSignal = useSignal<Card>(generateEmptyCard());
 
   return (
     <main class="mx-16 lg:mx-64 mt-16">
       <Header />
-      <ExcerptInput cardsSignal={cardsSignal} />
-      <CardsEditor cardsSignal={cardsSignal} />
+      <ExcerptInput
+        cardsSignal={cardsSignal}
+        customCardSignal={customCardSignal}
+      />
+      <CardsEditor
+        cardsSignal={cardsSignal}
+        customCardSignal={customCardSignal}
+      />
       <Footer />
     </main>
   );
