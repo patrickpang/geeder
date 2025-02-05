@@ -32,8 +32,6 @@ export const handler: Handlers = {
       </example>
     `;
 
-    console.log(Deno.env.get("GEMINI_API_KEY")!);
-
     const client = new OpenAI({
       baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/",
       apiKey: Deno.env.get("GEMINI_API_KEY")!,
