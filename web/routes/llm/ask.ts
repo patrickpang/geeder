@@ -33,14 +33,14 @@ export const handler: Handlers = {
     `;
 
     const client = new OpenAI({
-      baseURL: "https://api.groq.com/openai/v1",
-      apiKey: Deno.env.get("GROQ_API_KEY")!,
+      baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/",
+      apiKey: Deno.env.get("GEMINI_API_KEY")!,
       dangerouslyAllowBrowser: true, // OpenAI library thinks SSR is browser environment
     });
 
     const result = await client.chat.completions.create({
       messages: [{ role: "user", content: prompt }],
-      model: "llama-3.2-90b-vision-preview",
+      model: "gemini-2.0-flash-exp",
     });
     const response = result.choices[0].message.content!;
 
