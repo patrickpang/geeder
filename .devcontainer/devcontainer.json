@@ -20,7 +20,8 @@
 				"denoland.vscode-deno",
 				"bradlc.vscode-tailwindcss",
 				"humao.rest-client",
-				"sourcegraph.cody-ai"
+				"sourcegraph.cody-ai",
+				"ms-toolsai.jupyter"
 			]
 		}
 	}

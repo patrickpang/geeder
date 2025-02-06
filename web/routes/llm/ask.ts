@@ -1,6 +1,6 @@
 import { FreshContext, Handlers } from "$fresh/server.ts";
 import { nanoid } from "nanoid";
-import OpenAI from "openai";
+import { GoogleGenerativeAI, SchemaType } from "npm:@google/generative-ai";
 import { getUserIdFromRequest } from "../../lib/auth.ts";
 import { Card } from "../../lib/model.ts";
 
@@ -21,33 +21,43 @@ export const handler: Handlers = {
       <excerpt>
       ${excerpt}
       </excerpt>
-      <format>
-          Only return valid ndjson. 
-          One card per line.
-          No markdown.
-          No introduction.
-      </format>
-      <example>
-      {"question": str, "answer": str}
-      </example>
     `;
 
-    const client = new OpenAI({
-      baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/",
-      apiKey: Deno.env.get("GEMINI_API_KEY")!,
-      dangerouslyAllowBrowser: true, // OpenAI library thinks SSR is browser environment
+    const schema = {
+      description: "list of cards",
+      type: SchemaType.ARRAY,
+      items: {
+        type: SchemaType.OBJECT,
+        properties: {
+          question: {
+            type: SchemaType.STRING,
+            description: "question",
+            nullable: false,
+          },
+          answer: {
+            type: SchemaType.STRING,
+            description: "answer",
+            nullable: false,
+          },
+        },
+        required: ["question", "answer"],
+      },
+    };
+
+    const client = new GoogleGenerativeAI(Deno.env.get("GEMINI_API_KEY")!);
+    const model = client.getGenerativeModel({
+      model: "gemini-2.0-flash-001",
+      generationConfig: {
+        responseMimeType: "application/json",
+        responseSchema: schema,
+      },
     });
 
-    const result = await client.chat.completions.create({
-      messages: [{ role: "user", content: prompt }],
-      model: "gemini-2.0-flash-exp",
-    });
-    const response = result.choices[0].message.content!;
+    const result = await model.generateContent(prompt);
+    const response = result.response.text();
 
-    const cards = response
-      .split("\n")
-      .filter((line) => line.trim() !== "")
-      .map((line) => ({ ...JSON.parse(line), id: nanoid() } as Card));
+    const cards = JSON.parse(response)
+      .map((qna) => ({ ...qna, id: nanoid() } as Card));
 
     return Response.json({ success: true, cards });
   },
