@@ -1,4 +1,4 @@
-import { Client } from "npm:@libsql/client";
+import { Client } from "npm:@libsql/client/web";
 import { FreshContext } from "$fresh/server.ts";
 import { getTursoClient } from "../lib/turso.ts";
 
