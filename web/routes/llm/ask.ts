@@ -46,7 +46,7 @@ export const handler: Handlers = {
 
     const client = new GoogleGenerativeAI(Deno.env.get("GEMINI_API_KEY")!);
     const model = client.getGenerativeModel({
-      model: "gemini-2.0-flash-001",
+      model: "gemini-3-flash-preview",
       generationConfig: {
         responseMimeType: "application/json",
         responseSchema: schema,
