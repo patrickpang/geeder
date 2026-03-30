@@ -19,16 +19,11 @@ async function generateCards(payload: Payload): Promise<Card[] | null> {
       credentials: "same-origin",
     });
     if (!response.ok) {
-      console.error({
-        statusCode: response.status,
-        error: await response.text(),
-      });
+      console.error({ statusCode: response.status, error: await response.text() });
       return null;
     }
-
     const data = await response.json();
-    const cards = data["cards"];
-    return cards;
+    return data["cards"];
   } catch (error) {
     console.error({ error });
     return null;
@@ -38,11 +33,8 @@ async function generateCards(payload: Payload): Promise<Card[] | null> {
 export default function ExcerptInput({ cardsSignal, customCardSignal }: Props) {
   const stateSignal = useSignal<"editing" | "submitting">("editing");
 
-  const onSubmit: JSX.SubmitEventHandler<HTMLFormElement> = async (
-    e,
-  ) => {
+  const onSubmit: JSX.SubmitEventHandler<HTMLFormElement> = async (e) => {
     stateSignal.value = "submitting";
-
     e.preventDefault();
     const form = e.currentTarget;
     const formData = new FormData(form);
@@ -51,7 +43,6 @@ export default function ExcerptInput({ cardsSignal, customCardSignal }: Props) {
     if (cards !== null) {
       cardsSignal.value = cards;
     }
-
     stateSignal.value = "editing";
   };
 
@@ -70,45 +61,22 @@ export default function ExcerptInput({ cardsSignal, customCardSignal }: Props) {
         required
         minLength={10}
       />
-
       <div class="flex items-center justify-between">
-        {
-          /* <div>
-          <select
-            name={deckInputName}
-            class="select select-bordered max-w-sm"
-          >
-            {deckNames.map((deckName) => (
-              <option key={deckName} value={deckName}>
-                {deckName}
-              </option>
-            ))}
-          </select>
-        </div> */
-        }
         <div></div>
-
         <div class="flex items-center">
-          <button
-            type="reset"
-            class="btn btn-ghost mr-2"
-          >
-            Clear
-          </button>
-
+          <button type="reset" class="btn btn-ghost mr-2">Clear</button>
           <button
             type="submit"
             class="btn"
             disabled={stateSignal.value === "submitting"}
           >
             {stateSignal.value === "submitting" && (
-              <span class="loading loading-dots loading-md loading-indicator" />
+              <span class="loading loading-dots loading-md" />
             )}
             <span>Generate</span>
           </button>
         </div>
       </div>
     </form>
-    // TODO: show error message here
   );
 }

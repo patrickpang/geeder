@@ -1,4 +1,4 @@
-import { createClient } from "npm:@libsql/client/web";
+import { createClient } from "@libsql/client";
 
 export const getTursoClient = () =>
   createClient({

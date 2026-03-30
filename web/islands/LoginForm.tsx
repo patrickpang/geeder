@@ -18,15 +18,10 @@ async function login(payload: Payload): Promise<LoginResponse | null> {
       credentials: "same-origin",
     });
     if (!response.ok) {
-      console.error({
-        statusCode: response.status,
-        error: await response.text(),
-      });
+      console.error({ statusCode: response.status, error: await response.text() });
       return null;
     }
-
-    const data = (await response.json()) as LoginResponse;
-    return data;
+    return (await response.json()) as LoginResponse;
   } catch (error) {
     console.error({ error });
     return null;
@@ -34,20 +29,14 @@ async function login(payload: Payload): Promise<LoginResponse | null> {
 }
 
 export default function LoginForm() {
-  const onSubmit: JSX.SubmitEventHandler<HTMLFormElement> = async (
-    e,
-  ) => {
+  const onSubmit: JSX.SubmitEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
     const form = e.currentTarget;
     const formData = new FormData(form);
     const payload = (Object.fromEntries(formData) as object) as Payload;
     const response = await login(payload);
-    if (response) {
-      const { success } = response;
-      if (success) {
-        // redirect to home page and remove login page from history stack
-        globalThis.location.replace("/");
-      }
+    if (response?.success) {
+      globalThis.location.replace("/");
     }
   };
 
@@ -61,10 +50,7 @@ export default function LoginForm() {
         Password
         <input type="password" name="password" class="grow" required />
       </label>
-      <button
-        type="submit"
-        class="btn mt-4"
-      >
+      <button type="submit" class="btn mt-4">
         <span>Submit</span>
       </button>
     </form>
